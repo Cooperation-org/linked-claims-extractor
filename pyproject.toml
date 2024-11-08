@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "Extract structured claims from text and PDFs"
 requires-python = ">=3.8"
 dependencies = [
+    "langchain-anthropic>=0.2.4",
     "langchain>=0.1.0",
     "langchain-community>=0.0.10",
     "openai>=1.0.0",

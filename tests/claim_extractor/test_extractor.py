@@ -2,6 +2,7 @@
 import json
 import os
 import pytest
+from pprint import pprint
 from unittest.mock import Mock, patch
 from claim_extractor import ClaimExtractor
 from langchain.chat_models import ChatOpenAI
@@ -40,23 +41,23 @@ def extractor(mock_llm):
 def test_extract_claims(extractor):
     """Test basic claim extraction."""
     result = extractor.extract_claims(SAMPLE_TEXT)
+    pprint(result)
     assert isinstance(result, str)
     assert "LinkedClaim" in result
 
 @pytest.mark.integration
-def test_openai_integration():
-    """Test actual OpenAI integration. Requires API key."""
-    if 'OPENAI_API_KEY' not in os.environ:
-        pytest.skip('OPENAI_API_KEY not found in environment')
+def test_default_integration():
+    """Test actual Anthropic integration. Requires API key."""
+    if 'ANTHROPIC_API_KEY' not in os.environ:
+        pytest.skip('ANTHROPIC_API_KEY not found in environment')
         
-    llm = ChatOpenAI(temperature=0)
-    extractor = ClaimExtractor(llm=llm)
+    extractor = ClaimExtractor()
     result = extractor.extract_claims(SAMPLE_TEXT)
-    import pdb; pdb.set_trace()
+    pytest.set_trace()
+
     assert isinstance(result, str)
     assert "LinkedClaim" in result
 
-@pytest.mark.vcr  # If using VCR.py for request recording
 def test_extract_claims_from_url(extractor):
     """Test URL extraction."""
     url = "https://example.com/article"

@@ -1,15 +1,22 @@
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
-from langchain_community.chat_models import ChatOpenAI, ChatAnthropic
+from langchain_community.chat_models import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain.base_language import BaseLanguageModel
 from typing import Optional, Union
 from .schemas.loader import load_raw_schema, LINKED_TRUST
+
+def default_llm():
+    return  ChatAnthropic(
+               model="claude-3-sonnet-20240229",  # This is the current Sonnet model
+               temperature=0,  # 0 to 1, lower means more deterministic
+               max_tokens=4096)
+   
 
 class ClaimExtractor:
     def __init__(
         self, 
         llm: Optional[BaseLanguageModel] = None,
-        schema_name: str = LINKED_TRUST, 
-        temperature: float = 0
+        schema_name: str = LINKED_TRUST 
     ):
         """
         Initialize claim extractor with specified schema and LLM.
@@ -20,10 +27,10 @@ class ClaimExtractor:
             temperature: Temperature setting for the LLM if creating default
         """
         self.schema = load_raw_schema(schema_name).replace("{", "{{").replace("}", "}}")
-        self.llm = llm or ChatOpenAI(temperature=temperature)
-        self.system_template = f"""You are a claim extraction assistant. You analyze text and extract claims according to this schema:
+        self.llm = llm or default_llm()
+        self.system_template = f"""You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
         {self.schema}
-        For each claim you identify, structure it according to the given schema above, returning them in a json array."""
+        With no explanation, return extracted claims in a valid json array"""
         
     def make_prompt(self) -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
