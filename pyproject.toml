@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "claim-extractor"
+name = "linked-claims-extractor"
 version = "0.1.0"
 description = "Extract structured claims from text and PDFs"
 readme = "README.md"
