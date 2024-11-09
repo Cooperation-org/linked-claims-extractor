@@ -1,3 +1,5 @@
+import logging
+from typing import List, Dict, Any
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_community.chat_models import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
@@ -46,7 +48,7 @@ class ClaimExtractor:
             HumanMessagePromptTemplate.from_template(human_template)
         ])
     
-    def extract_claims(self, text: str) -> str:
+    def extract_claims(self, text: str) -> List[dict[str, Any]]:
         """
         Extract claims from the given text.
         
@@ -59,7 +61,11 @@ class ClaimExtractor:
         prompt = self.make_prompt()
         messages = prompt.format_messages(text=text)
         response = self.llm(messages)
-        return response.content
+        try:
+            return json.loads(response.content)
+        except json.JSONDecodeError as e:
+            logging.info(f"Failed to parse LLM response as JSON: {response.content}")
+            return []
     
     def extract_claims_from_url(self, url: str) -> str:
         """
