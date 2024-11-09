@@ -14,17 +14,22 @@ SAMPLE_TEXT = """Our program helped 100 farmers increase their yield by 25% in 2
                  resulting in an additional $50,000 in income per farmer."""
 
 EXPECTED_CLAIMS = """[
-    {
-        "type": "LinkedClaim",
-        "claim": "Program increased farmer yields",
-        "aspect": "agricultural_productivity",
-        "statement": "100 farmers increased yield by 25%",
-        "object": "farmers",
-        "source": {
-            "type": "ClaimSource",
-            "dateObserved": "2023"
-        }
-    }
+  {'amt': 5000000,
+  'aspect': 'impact:financial',
+  'claim': 'impact',
+  'claimAddress': '',
+  'confidence': 1,
+  'effectiveDate': '2023-01-01T00:00:00.000Z',
+  'howKnown': 'FIRST_HAND',
+  'images': [],
+  'name': '',
+  'object': '',
+  'sourceURI': '',
+  'stars': 0,
+  'statement': 'Our program helped 100 farmers increase their yield by 25% in '
+               '2023, resulting in an additional $50,000 in income per farmer.',
+  'subject': 'Our program',
+  'unit': 'usd'}
 ]"""
 
 
@@ -43,20 +48,18 @@ def test_extract_claims(extractor):
     result = extractor.extract_claims(SAMPLE_TEXT)
     pprint(result)
     assert isinstance(result, str)
-    assert "LinkedClaim" in result
+    assert "effectiveDate" in result
 
 @pytest.mark.integration
-def test_default_integration():
+def test_default_integration_is_smart():
     """Test actual Anthropic integration. Requires API key."""
     if 'ANTHROPIC_API_KEY' not in os.environ:
         pytest.skip('ANTHROPIC_API_KEY not found in environment')
         
     extractor = ClaimExtractor()
     result = extractor.extract_claims(SAMPLE_TEXT)
-    pytest.set_trace()
-
-    assert isinstance(result, str)
-    assert "LinkedClaim" in result
+    data = json.loads(result)
+    assert data[0]['amt'] == 5000000
 
 def test_extract_claims_from_url(extractor):
     """Test URL extraction."""
@@ -67,7 +70,7 @@ def test_extract_claims_from_url(extractor):
         
         result = extractor.extract_claims_from_url(url)
         assert isinstance(result, str)
-        assert "LinkedClaim" in result
+        assert "effectiveDate" in result
 
 def test_schema_loading(extractor):
     """Test schema was loaded properly."""

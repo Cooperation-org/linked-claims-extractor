@@ -3,7 +3,7 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain.base_language import BaseLanguageModel
 from typing import Optional, Union
-from .schemas.loader import load_raw_schema, LINKED_TRUST
+from .schemas.loader import load_schema_info, LINKED_TRUST
 
 def default_llm():
     return  ChatAnthropic(
@@ -26,11 +26,15 @@ class ClaimExtractor:
             schema_name: Schema identifier or path/URL to use for extraction
             temperature: Temperature setting for the LLM if creating default
         """
-        self.schema = load_raw_schema(schema_name).replace("{", "{{").replace("}", "}}")
+        (self.schema, self.meta)  = load_schema_info(schema_name)
         self.llm = llm or default_llm()
         self.system_template = f"""You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
         {self.schema}
-        With no explanation, return extracted claims in a valid json array"""
+        With no explanation, return extracted claims in a valid json array.  Consider this meta information
+
+        {self.meta}
+
+        when filling the fields.  Remember to return just the bare extracted claims in a valid json array"""
         
     def make_prompt(self) -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""

@@ -13,6 +13,26 @@ CLAIM_SCHEMAS = {
     LINKED_TRUST: "linked_trust.json"
 }
 
+CLAIM_METAS = {
+    LINKED_TRUST: "linked_trust.meta"
+}
+
+def load_schema_info(schema_id: str) -> (str, str):
+    """
+    Load the schema and meta info for use with the extractor
+    """
+    schema_str = load_raw_schema(schema_id).replace("{", "{{").replace("}", "}}")
+
+    if schema_id in CLAIM_METAS:
+        meta_file = Path(__file__).parent / CLAIM_METAS.get(schema_id)
+        with open(meta_file, encoding='utf-8') as f:
+            meta_info = f.read()
+    else:
+       meta_info = ''
+
+    return (schema_str, meta_info)
+
+
 def load_raw_schema(schema_id: str) -> str:
     """
     Load schema content from either URL or local file.

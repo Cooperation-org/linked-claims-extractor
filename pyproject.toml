@@ -6,7 +6,17 @@ build-backend = "hatchling.build"
 name = "claim-extractor"
 version = "0.1.0"
 description = "Extract structured claims from text and PDFs"
+readme = "README.md"
+authors = [
+    { name = "Golda Velez", email = "gvelez17@gmail.com" }
+]
+license = { text = "MIT" }
 requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "langchain-anthropic>=0.2.4",
     "langchain>=0.1.0",
@@ -19,6 +29,10 @@ dependencies = [
     "pdfminer.six>=20221105",
 ]
 
+urls.homepage = "https://github.com/Cooperation-org/linked-claims-extractor"
+urls.bug_tracker = "https://github.com/Cooperation-org/linked-claims-extractor/issues"
+
+
 [tool.hatch.build.targets.wheel]
 packages = [
     "src/claim_extractor",
@@ -27,8 +41,6 @@ packages = [
 
 [tool.pytest.ini_options]
 markers = [
-    "openai: tests that use OpenAI API",
-    "anthropic: tests that use Anthropic API",
     "integration: tests that use any real API",
     "slow: marks tests as slow",
 ]
