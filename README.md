@@ -3,7 +3,7 @@ Extract claims from text, url or pdf using AI LLMs to help
 
 ## Installation and Usage
 
-`pip install linked-claim-extractor`
+`pip install linked-claims-extractor`
 
 Default is to use Anthropic which requires setting
 `export ANTHROPIC_API_KEY=...`
