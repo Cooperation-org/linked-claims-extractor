@@ -44,3 +44,6 @@ markers = [
     "integration: tests that use any real API",
     "slow: marks tests as slow",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
