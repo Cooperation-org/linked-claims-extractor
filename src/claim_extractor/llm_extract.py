@@ -1,4 +1,5 @@
 import json
+import re
 import logging
 from typing import List, Dict, Any, Optional, Union
 
@@ -34,11 +35,14 @@ class ClaimExtractor:
         self.llm = llm or default_llm()
         self.system_template = f"""You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
         {self.schema}
-        With no explanation, return extracted claims in a valid json array.  Consider this meta information
+        Consider this meta information when filling the fields
 
         {self.meta}
+        
+        Output format: Return ONLY a JSON array of claims with no explanatory text, no preamble, and no other content. The output must start with [ and end with ]. 
 
-        when filling the fields.  Remember to return just the bare extracted claims in a valid json array"""
+        """
+
         
     def make_prompt(self) -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
@@ -62,10 +66,18 @@ class ClaimExtractor:
         """
         prompt = self.make_prompt()
         messages = prompt.format_messages(text=text)
+        import pdb; pdb.set_trace()
         response = self.llm(messages)
         try:
             return json.loads(response.content)
         except json.JSONDecodeError as e:
+            # sometimes the LLM insists on prepending some text
+            m = re.match(r'[^\[]+(\[[^\]]+\])[^\]]*$', response.content)
+            if m:
+                try:
+                    return json.loads(m.group(1))
+                except json.JSONDecodeError as e:
+                    pass 
             logging.info(f"Failed to parse LLM response as JSON: {response.content}")
             return []
     
