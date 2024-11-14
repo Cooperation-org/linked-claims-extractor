@@ -1,0 +1,15 @@
+# Core dependencies
+anthropic>=0.7.0  # for Claude API
+chromadb>=0.4.0  # vector store
+sentence-transformers>=2.2.0  # for embeddings
+PyMuPDF>=1.22.0  # for PDF processing (also known as fitz)
+python-dotenv>=0.19.0  # for environment variables
+
+# For image processing
+Pillow>=9.0.0  # PIL for image handling
+transformers>=4.30.0  # for CLIP model
+torch>=2.0.0  # required by transformers
+
+# For hybrid search
+rank-bm25>=0.2.2  # for keyword search
+numpy>=1.24.0  # for array operations
