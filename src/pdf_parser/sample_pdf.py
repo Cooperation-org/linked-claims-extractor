@@ -5,6 +5,8 @@ from typing import List, Tuple
 from chromadb.utils import embedding_functions
 import chromadb
 from sentence_transformers import SentenceTransformer
+from rank_bm25 import BM25Okapi
+import numpy as np
 
 from proc_pdf import PDFProcessor
 
@@ -43,8 +45,8 @@ class LocalRAG:
             texts.append(doc.content)
             metadatas.append({
                 'type': doc.type,
-                'page': doc.get('page', 0),
-                'bbox': str(doc.bbox)  # Convert bbox to string for storage
+                'page': doc.metadata.get('page', '0'),
+                'bbox': str(doc.metadata.get('bbox', ''))  # Convert bbox to string for storage
             })
         
         # Add to Chroma
