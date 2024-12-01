@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 import shutil
-from document_manager import DocumentManager
+from pdf_parser.document_manager import DocumentManager
 import tempfile
 
 @pytest.fixture
