@@ -5,29 +5,31 @@ from .cache_manager import PDFProcessingCache, ChromaDBManager
 import chromadb
 
 class DocumentManager:
-
     def __init__(self, collection_name: str = "documents", 
              persist_dir: str = ".chromadb",
              cache_dir: str = ".cache"):
         self.persist_dir = persist_dir
         self.collection_name = collection_name
         self.db_manager = ChromaDBManager(persist_dir)
-        self.collection = self.db_manager.get_or_create_collection(collection_name)
+        self.text_collection = self.db_manager.get_or_create_collection(f"{collection_name}_text")
+        self.image_collection = self.db_manager.get_or_create_collection(f"{collection_name}_images")
         self.cache = PDFProcessingCache(cache_dir)
         self.processor = PDFProcessor()
 
     def reset_collection(self):
-        """Completely reset the ChromaDB collection"""
-        print(f"Resetting ChromaDB collection {self.collection_name}...")
-        self.db_manager.delete_collection(self.collection_name)
-        self.collection = self.db_manager.get_or_create_collection(self.collection_name)
-        print("ChromaDB collection reset complete")
-    
-    
+        """Completely reset the ChromaDB collections"""
+        print(f"Resetting ChromaDB collections {self.collection_name}_text and {self.collection_name}_images...")
+        self.db_manager.delete_collection(f"{self.collection_name}_text")
+        self.db_manager.delete_collection(f"{self.collection_name}_images")
+        self.text_collection = self.db_manager.get_or_create_collection(f"{self.collection_name}_text")
+        self.image_collection = self.db_manager.get_or_create_collection(f"{self.collection_name}_images")
+        print("ChromaDB collections reset complete")
+
     def process_pdf(self, pdf_path: str, reset: bool = False):
-        """Process PDF and add to collection"""
+        """Process PDF and add to collections"""
         if reset:
             self.reset_collection()
+            self.cache.reset()
             
         pdf_name = Path(pdf_path).stem
 
@@ -42,10 +44,6 @@ class DocumentManager:
         print(f"   Generated {len(chunks)} chunks")
         
         print("2. Preparing data for ChromaDB...")
-        embeddings = [chunk.embedding.tolist() for chunk in chunks]
-        ids = [f"{pdf_name}_{chunk.chunk_id}" for chunk in chunks]
-        documents = [chunk.content for chunk in chunks]
-
         metadatas = []
         for chunk in chunks:
             metadata = chunk.metadata.copy()
@@ -56,49 +54,61 @@ class DocumentManager:
                 metadata['bbox_right'] = x2
                 metadata['bbox_bottom'] = y2
                 del metadata['bbox']
-            
             metadata['source_document'] = pdf_name
             metadatas.append(metadata)
-
         
-        print(f"3. Adding chunks to ChromaDB collection {self.collection_name}...")
-        try:
-            self.collection.add(
-                embeddings=embeddings,
-                ids=ids,
-                documents=documents,
-                metadatas=metadatas
-            )
-        except chromadb.errors.DuplicateIDError as e:
-            # Extract duplicate IDs from error message
-            dupes = str(e).split("duplicates of: ")[1].split(" in add")[0].split(", ")
-            print("\nWarning: Found duplicate chunks:")
-            for dupe_id in dupes:
-                # Find the chunk's index
-                try:
-                    idx = ids.index(dupe_id)
-                    print(f"Page {chunks[idx].metadata['page']}: {documents[idx][:100]}...")
-                except:
-                    print(f"Duplicate ID: {dupe_id}")
-            print("\nSkipping duplicates and continuing...")
+        print(f"3. Adding chunks to ChromaDB collections...")
+        for i, chunk in enumerate(chunks):
+            try:
+                collection = self.text_collection if chunk.type == 'text' else self.image_collection
+                collection.add(
+                    embeddings=[chunk.embedding.tolist()],
+                    ids=[f"{pdf_name}_{chunk.chunk_id}"],
+                    documents=[chunk.content],
+                    metadatas=[metadatas[i]]
+                )
+            except chromadb.errors.DuplicateIDError:
+                print(f"Skipping duplicate chunk: {chunk.content[:100]}...")
         
         # Update cache
         self.cache.update_metadata(pdf_path, pdf_name)
         print("Processing complete!")
 
     def query(self, query_text: str, n_results: int = 3):
-        """Query across all documents in collection"""
-        results = self.collection.query(
-            query_texts=[query_text],
+        """Query across all documents in collections"""
+        # Get text embeddings for text collection
+        text_embedding = self.processor.text_model.encode(query_text)
+        text_results = self.text_collection.query(
+            query_embeddings=[text_embedding.tolist()],
+            n_results=n_results
+        )
+        
+        # Get CLIP embeddings for image collection using the text encoder
+        inputs = self.processor.clip_processor(text=query_text, return_tensors="pt")
+        image_query_embedding = self.processor.clip_model.get_text_features(**inputs)
+        image_results = self.image_collection.query(
+            query_embeddings=[image_query_embedding.detach().numpy()[0].tolist()],
             n_results=n_results
         )
         
         formatted_results = []
-        for i in range(len(results['documents'][0])):
+        
+        # Add text results
+        for i in range(len(text_results['documents'][0])):
             formatted_results.append({
-                'content': results['documents'][0][i],
-                'metadata': results['metadatas'][0][i],
-                'distance': results['distances'][0][i]
+                'content': text_results['documents'][0][i],
+                'metadata': text_results['metadatas'][0][i],
+                'distance': text_results['distances'][0][i]
             })
         
-        return formatted_results
+        # Add image results
+        for i in range(len(image_results['documents'][0])):
+            formatted_results.append({
+                'content': image_results['documents'][0][i],
+                'metadata': image_results['metadatas'][0][i],
+                'distance': image_results['distances'][0][i]
+            })
+        
+        # Sort by distance and limit to n_results
+        formatted_results.sort(key=lambda x: x['distance'])
+        return formatted_results[:n_results]

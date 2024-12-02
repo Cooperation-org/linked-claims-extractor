@@ -45,6 +45,23 @@ class PDFProcessingCache:
         with open(os.path.join(self.cache_dir, f"{pdf_name}_meta.json"), 'w') as f:
             json.dump(metadata, f)
 
+    def reset(self):
+        """Reset the entire cache by removing all metadata files"""
+        if os.path.exists(self.cache_dir):
+            for file in os.listdir(self.cache_dir):
+                if file.endswith('_meta.json'):
+                    os.remove(os.path.join(self.cache_dir, file))
+                    print(f"Removed cache file: {file}")
+        print("Cache reset complete")
+
+    def reset_document(self, pdf_name: str):
+        """Reset cache for a specific document"""
+        cache_path = os.path.join(self.cache_dir, f"{pdf_name}_meta.json")
+        if os.path.exists(cache_path):
+            os.remove(cache_path)
+            print(f"Removed cache for document: {pdf_name}")
+
+
 class ChromaDBManager:
     def __init__(self, persist_dir: str = ".chromadb"):
         self.client = chromadb.PersistentClient(path=persist_dir)
