@@ -1,15 +1,14 @@
+import sys
 from pathlib import Path
 from claim_extractor import ClaimExtractor
 import time
 
 def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.html"):
     """Process all chunks and create visualization"""
-    # Get all chunks from ChromaDB in order
-    results = docmgr.collection.get()
 
     # Get all chunks from ChromaDB in order
     print("Getting chunks from ChromaDB...")
-    results = docmgr.collection.get()
+    results = docmgr.text_collection.get()
     print(f"Results keys: {results.keys()}")
     print(f"Number of documents: {len(results['documents'])}")
     if len(results['documents']) > 0:

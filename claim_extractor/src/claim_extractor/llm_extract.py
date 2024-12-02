@@ -66,7 +66,10 @@ class ClaimExtractor:
         """
         prompt = self.make_prompt()
         messages = prompt.format_messages(text=text)
-        response = self.llm(messages)
+        try:
+            response = self.llm(messages)
+        except TypeError as e:
+            logging.error(f"Failed to authenticate: {str(e)}.  Do you need to use dotenv in caller?")
         try:
             return json.loads(response.content)
         except json.JSONDecodeError as e:
