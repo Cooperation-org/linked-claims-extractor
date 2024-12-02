@@ -1,9 +1,9 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "pdf-parser"
+name = "pdf_parser"
 version = "0.1.0"
 description = "PDF processing tools for claim extraction"
 readme = "README.md"
@@ -12,11 +12,6 @@ authors = [
 ]
 license = { text = "MIT" }
 requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
 dependencies = [
     "PyMuPDF",
     "transformers",
@@ -26,5 +21,9 @@ dependencies = [
     "linked-claims-extractor>=0.1.1"
 ]
 
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pdf_parser*"]
