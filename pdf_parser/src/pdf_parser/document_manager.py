@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Dict, Any
-from pdf_processor import PDFProcessor
-from cache_manager import PDFProcessingCache, ChromaDBManager
+from .pdf_processor import PDFProcessor
+from .cache_manager import PDFProcessingCache, ChromaDBManager
 import chromadb
 
 class DocumentManager:
@@ -45,10 +45,21 @@ class DocumentManager:
         embeddings = [chunk.embedding.tolist() for chunk in chunks]
         ids = [f"{pdf_name}_{chunk.chunk_id}" for chunk in chunks]
         documents = [chunk.content for chunk in chunks]
-        metadatas = [{
-            **chunk.metadata,
-            'source_document': pdf_name,
-        } for chunk in chunks]
+
+        metadatas = []
+        for chunk in chunks:
+            metadata = chunk.metadata.copy()
+            if 'bbox' in metadata:
+                x1, y1, x2, y2 = metadata['bbox']
+                metadata['bbox_left'] = x1
+                metadata['bbox_top'] = y1
+                metadata['bbox_right'] = x2
+                metadata['bbox_bottom'] = y2
+                del metadata['bbox']
+            
+            metadata['source_document'] = pdf_name
+            metadatas.append(metadata)
+
         
         print(f"3. Adding chunks to ChromaDB collection {self.collection_name}...")
         try:

@@ -1,3 +1,4 @@
+import os
 import pytest
 from pathlib import Path
 import shutil
@@ -12,13 +13,16 @@ def test_dirs():
             yield cache_dir, chroma_dir
 
 @pytest.fixture
-def test_pdf(tmp_path):
-    """Create a simple test PDF file"""
-    pdf_path = tmp_path / "test.pdf"
-    # You'll need to create a simple PDF here
-    # For now just creating an empty file
-    pdf_path.write_bytes(b"%PDF-1.4")  # Minimal PDF header
-    return str(pdf_path)
+def test_pdf():
+    """Use a real PDF from the fixtures directory"""
+    # Get the directory containing this test file
+    test_dir = os.path.dirname(os.path.abspath(__file__))
+    # Path to the fixtures directory
+    fixtures_dir = os.path.join(test_dir, "fixtures")
+    # Path to the test PDF
+    pdf_path = os.path.join(fixtures_dir, "simple.pdf")
+    assert os.path.exists(pdf_path), f"Test PDF not found at {pdf_path}"
+    return pdf_path
 
 def test_document_manager_caching(test_dirs, test_pdf):
     """Test that document manager correctly uses cache"""

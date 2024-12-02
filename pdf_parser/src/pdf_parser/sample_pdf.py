@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
 import numpy as np
 
-from proc_pdf import PDFProcessor
+from .pdf_processor import PDFProcessor
 
 class LocalRAG:
     def __init__(self, collection_name="pdf_store"):

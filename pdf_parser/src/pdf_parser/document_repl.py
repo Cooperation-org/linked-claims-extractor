@@ -1,7 +1,7 @@
 import cmd
 import json
 from typing import Optional
-from document_manager import DocumentManager
+from .document_manager import DocumentManager
 
 class DocumentREPL(cmd.Cmd):
     intro = 'Welcome to the Document Query REPL. Type help or ? to list commands.'
