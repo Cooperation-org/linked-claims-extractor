@@ -16,7 +16,7 @@ extractor = ClaimExtractor()
 
 result = extractor.extract_claims('some text')
 
-pprint(json.loads(result))
+pprint(result)
 ```
 
 ## Developer Environment

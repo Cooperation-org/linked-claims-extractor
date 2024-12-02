@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linked-claims-extractor"
+version = "0.1.1"
+description = "Extract structured claims from text and PDFs"
+readme = "README.md"
+authors = [
+    { name = "Golda Velez", email = "gvelez17@gmail.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "langchain-anthropic>=0.2.4",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "openai>=1.0.0",
+    "requests>=2.25.0",
+    "python-dotenv>=1.0.0",
+    "pytest>=7.0.0",
+    "pypdf>=3.0.0",
+    "pdfminer.six>=20221105",
+]
+
+[project.urls]
+homepage = "https://github.com/Cooperation-org/linked-claims-extractor"
+bug_tracker = "https://github.com/Cooperation-org/linked-claims-extractor/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["claim_extractor*"]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: tests that use any real API",
+    "slow: marks tests as slow",
+]
+pythonpath = ["src"]

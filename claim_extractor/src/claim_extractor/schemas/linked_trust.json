@@ -1,0 +1,28 @@
+{
+  "subject": "string",
+  "claim": "string",
+  "object": "string",
+  "statement": "string",
+  "aspect": "string",
+  "amt": 0,
+  "name": "string",
+  "howKnown": "FIRST_HAND",
+  "images": [
+    {
+      "url": "string",
+      "metadata": {
+        "captian": "string",
+        "description": "string"
+      },
+      "effectiveDate": "2024-11-07T21:23:25.596Z",
+      "digestMultibase": "string",
+      "signature": "string",
+      "owner": "string"
+    }
+  ],
+  "sourceURI": "string",
+  "effectiveDate": "2024-11-07T21:23:25.596Z",
+  "confidence": 0,
+  "claimAddress": "string",
+  "stars": 0
+}
