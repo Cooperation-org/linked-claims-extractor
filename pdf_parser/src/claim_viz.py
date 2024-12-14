@@ -2,6 +2,11 @@ import sys
 from pathlib import Path
 from claim_extractor import ClaimExtractor
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MAX_CHUNKS = 20
 
 def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.html"):
     """Process all chunks and create visualization"""
@@ -20,8 +25,8 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
     
     # Sort by page and position
     chunks_with_metadata = list(zip(
-        results['documents'], 
-        results['metadatas']
+        results['documents'][0:MAX_CHUNKS], 
+        results['metadatas'][0:MAX_CHUNKS]
     ))
     chunks_with_metadata.sort(key=lambda x: (x[1]['page']))
     
