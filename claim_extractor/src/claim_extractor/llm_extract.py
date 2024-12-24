@@ -31,14 +31,15 @@ class ClaimExtractor:
             schema_name: Schema identifier or path/URL to use for extraction
             temperature: Temperature setting for the LLM if creating default
         """
-        (self.schema, self.meta, self.post_processor)  = load_schema_info(schema_name)
+        (self.schema, self.meta)  = load_schema_info(schema_name)
         self.llm = llm or default_llm()
         self.system_template = f"""You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
         {self.schema}
         Consider this meta information when filling the fields
 
         {self.meta}
-        
+
+        If no clear claim is present, you may return an empty json array. ONLY derive claims from the provided text.        
         Output format: Return ONLY a JSON array of claims with no explanatory text, no preamble, and no other content. The output must start with [ and end with ]. 
 
         """
