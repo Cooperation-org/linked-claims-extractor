@@ -15,6 +15,11 @@ pip install -e .
 
 Then, to exercise the code, you may run
 
+To start a REPL:
+
 `python src/main.py`
+
+
+To iterate thru a PDF and output HTML visualizing all the claims:
 
 `python src/claim_viz.py`
