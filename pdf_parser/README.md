@@ -23,3 +23,15 @@ To start a REPL:
 To iterate thru a PDF and output HTML visualizing all the claims:
 
 `python src/claim_viz.py`
+
+## Local development including changes to claim_extractor
+
+If you are modifying both packages at once, force the use of the local claim_extractor as follows:
+
+```
+# make changes to ../claim_extractor files including the version
+pip uninstall linked-claims-extractor
+pip install -e ../claim_extractor
+pip list | grep linked-claims-extractor
+# make sure the new version shows up
+```
