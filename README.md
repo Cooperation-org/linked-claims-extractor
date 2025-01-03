@@ -1,36 +1,34 @@
-# linked-claims-extractor
-Extract claims from text, url or pdf using AI LLMs to help
+# Linked Claims Extractor and PDF Parser
 
-## Installation and Usage
+This repository contains two independent projects for extracting and processing claims from text, URLs, and PDFs using AI-powered language models (LLMs). Both projects will be published to PyPI, currently the extractor is published.
 
-`pip install linked-claims-extractor`
+## Projects
 
-Default is to use Anthropic which requires setting
-`export ANTHROPIC_API_KEY=...`
+1. **[Linked Claims Extractor](./claim_extractor/README.md)**: Extracts structured claims from unstructured text, URLs, or PDFs using AI models like Anthropic and OpenAI.
+2. **[PDF Parser](./pdf_parser/README.md)**: Processes PDF files into structured chunks of text and images, making it easier to analyze and verify claims.
 
-```
-from claim_extractor import ClaimExtractor
+---
 
-extractor = ClaimExtractor()
-# or extractor = ClaimExtractor(llm=your_llm, schema=schema_from_list)
+## Installation
 
-result = extractor.extract_claims('some text')
+Each project will be installed independently via PyPI:
 
-pprint(result)
-```
-
-## Developer Environment
-
-This project uses pyproject.toml for dependencies
-
-```
-python -m venv .venv
-. .venv/bin/activate
-pip install -e .
+### Linked Claims Extractor
+```bash
+pip install linked-claims-extractor
 ```
 
-## Testing and Debugging
+### PDF Parser
+PyPI tbd
+For now install manually by following the intructions in the readme
+---
 
-```
-pytest -s --pdb
-```
+## Contributing
+
+Contributions are welcome! Please refer to the individual project READMEs for contribution guidelines.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
