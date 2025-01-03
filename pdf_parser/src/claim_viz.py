@@ -96,7 +96,7 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
 
 if __name__ == "__main__":
     import argparse
-    from document_manager import DocumentManager
+    from pdf_parser import DocumentManager
     
     parser = argparse.ArgumentParser(description='Extract and visualize claims from PDF')
     parser.add_argument('--pdf', type=str, default="example.pdf",

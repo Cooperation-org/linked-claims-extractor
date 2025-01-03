@@ -81,7 +81,7 @@ def test_default_integration_reads_links():
     extractor = ClaimExtractor()
     result = extractor.extract_claims(SAMPLE_WITH_LINK)
     assert isinstance(result, list)
-    assert result[0]['subject'] == 5000000
+    assert result[0]['subject'] == 'https://www.trustpilot.com/review/pilltime.co.uk'
 
 
 

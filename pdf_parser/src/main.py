@@ -1,8 +1,8 @@
 import argparse
 from pathlib import Path
 import sys
-from document_manager import DocumentManager
-from document_repl import DocumentREPL
+from pdf_parser import DocumentManager
+from pdf_parser import DocumentREPL
 
 def main():
     parser = argparse.ArgumentParser(description='Process and query PDF documents')
