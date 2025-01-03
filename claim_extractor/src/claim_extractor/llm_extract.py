@@ -38,7 +38,8 @@ class ClaimExtractor:
         Consider this meta information when filling the fields
 
         {self.meta}
-        
+
+        If no clear claim is present, you may return an empty json array. ONLY derive claims from the provided text.        
         Output format: Return ONLY a JSON array of claims with no explanatory text, no preamble, and no other content. The output must start with [ and end with ]. 
 
         """
@@ -66,7 +67,10 @@ class ClaimExtractor:
         """
         prompt = self.make_prompt()
         messages = prompt.format_messages(text=text)
-        response = self.llm(messages)
+        try:
+            response = self.llm(messages)
+        except TypeError as e:
+            logging.error(f"Failed to authenticate: {str(e)}.  Do you need to use dotenv in caller?")
         try:
             return json.loads(response.content)
         except json.JSONDecodeError as e:
