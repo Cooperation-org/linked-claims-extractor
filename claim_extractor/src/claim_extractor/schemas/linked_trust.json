@@ -6,7 +6,7 @@
   "aspect": "string",
   "amt": 0,
   "name": "string",
-  "howKnown": "FIRST_HAND",
+  "howKnown": "WEB_DOCUMENT",
   "images": [
     {
       "url": "string",

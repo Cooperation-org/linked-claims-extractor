@@ -67,7 +67,7 @@ mypy-extensions==1.0.0
 networkx==3.4.2
 numpy==1.26.4
 oauthlib==3.2.2
-onnxruntime
+onnxruntime==1.20.1
 openai==1.55.3
 opentelemetry-api==1.28.1
 opentelemetry-exporter-otlp-proto-common==1.28.1
@@ -82,6 +82,7 @@ opentelemetry-util-http==0.49b1
 orjson==3.10.11
 overrides==7.7.0
 packaging==24.2
+-e git+ssh://git@github.com/Cooperation-org/linked-claims-extractor.git@03f87b7d9c6c9a2d336c34b4ae7aefe081a94c2f#egg=pdf_parser&subdirectory=pdf_parser
 pdfminer.six==20240706
 pillow==11.0.0
 pluggy==1.5.0
@@ -123,7 +124,7 @@ sympy==1.13.1
 tenacity==9.0.0
 threadpoolctl==3.5.0
 tokenizers==0.20.3
-torch
+torch==2.5.1
 tqdm==4.67.0
 transformers==4.46.2
 typer==0.13.0
