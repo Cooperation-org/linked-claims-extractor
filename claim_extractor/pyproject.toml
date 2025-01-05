@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "linked-claims-extractor"
-version = "0.1.3"
+version = "0.1.5"
 description = "Extract structured claims from text and PDFs"
 readme = "README.md"
 authors = [
@@ -35,6 +35,7 @@ bug_tracker = "https://github.com/Cooperation-org/linked-claims-extractor/issues
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+package-data = { claim_extractor = ["schemas/*.json", "schemas/*.meta"] }
 
 [tool.setuptools.packages.find]
 where = ["src"]

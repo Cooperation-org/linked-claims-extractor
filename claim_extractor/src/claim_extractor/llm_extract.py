@@ -56,7 +56,7 @@ class ClaimExtractor:
             HumanMessagePromptTemplate.from_template(prompt)
         ])
     
-    def extract_claims(self, text: str) -> List[dict[str, Any]]:
+    def extract_claims(self, text: str, prompt = '') -> List[dict[str, Any]]:
         """
         Extract claims from the given text.
         
@@ -66,7 +66,7 @@ class ClaimExtractor:
         Returns:
             str: JSON array of extracted claims
         """
-        prompt = self.make_prompt()
+        prompt = self.make_prompt(prompt)
         messages = prompt.format_messages(text=text)
         try:
             response = self.llm(messages)
