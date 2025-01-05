@@ -47,10 +47,12 @@ class ClaimExtractor:
         
     def make_prompt(self, prompt = '') -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
-        if not prompt:
+        if prompt:
+            prompt += " {text}"
+        else:
             prompt = """Here is a narrative about some impact. Please extract any specific claims:
         {text}"""
-        
+       
         return ChatPromptTemplate.from_messages([
             SystemMessagePromptTemplate.from_template(self.system_template),
             HumanMessagePromptTemplate.from_template(prompt)
