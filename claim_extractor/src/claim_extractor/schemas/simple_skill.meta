@@ -1,2 +1,4 @@
-skill_name: name of the skill demonstrated
-skill_description: description of the skill as it applies to the narrative provided
+skill_name: generic name of a skill that is supported by the job history narrative.
+skill_description: general description of the skill as supported by the provided narrative. 
+narrative: Quote exactly from the job history or narrative that supports the skill description.  do NOT add or make up anything
+
