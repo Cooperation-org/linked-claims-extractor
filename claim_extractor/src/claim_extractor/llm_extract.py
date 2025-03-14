@@ -1,7 +1,7 @@
 import json
 import re
 import logging
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional
 
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_community.chat_models import ChatOpenAI
@@ -15,7 +15,6 @@ def default_llm():
                model="claude-3-sonnet-20240229",  # This is the current Sonnet model
                temperature=0,  # 0 to 1, lower means more deterministic
                max_tokens=4096)
-   
 
 class ClaimExtractor:
     def __init__(
@@ -31,34 +30,59 @@ class ClaimExtractor:
             schema_name: Schema identifier or path/URL to use for extraction
             temperature: Temperature setting for the LLM if creating default
         """
-        (self.schema, self.meta)  = load_schema_info(schema_name)
+        self.schema, self.meta = load_schema_info(schema_name)
         self.llm = llm or default_llm()
-        self.system_template = f"""You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
+        # self.system_template = f
+        prompt_templates = [f"""
+        You are a claim extraction assistant that outputs raw json claims in a json array. You analyze text and extract claims according to this schema:
         {self.schema}
         Consider this meta information when filling the fields
 
         {self.meta}
 
         If no clear claim is present, you may return an empty json array. ONLY derive claims from the provided text.        
-        Output format: Return ONLY a JSON array of claims with no explanatory text, no preamble, and no other content. The output must start with [ and end with ]. 
+        Output format: Return ONLY a JSON array of claims with no explanatory text, no preamble, and no other content. The output must start with [ and end with ].
+        """,
+        f"""
+        You are a JSON claim extraction specialist. Your task is to analyze input text and identify factual claims matching the following schema:
+        {self.schema}
 
-        """
+        Meta Context for Claims:
+        {self.meta}
 
-        
-    def make_prompt(self, prompt = '') -> ChatPromptTemplate:
+        Instructions:
+        1. Thoroughly examine the provided text while cross-referencing the schema requirements
+        2. Only extract claims that are explicitly stated or strongly implied in the text
+        3. Maintain strict adherence to the defined schema structure
+        4. If no claims match the criteria, return an empty array []
+        5. Never invent claims or use external knowledge
+        6. Prioritize precision over quantity
+
+        Output Guidelines:
+        - ALWAYS output a valid JSON array (starting with [ and ending with ])
+        - NEVER include markdown formatting or code blocks
+        - NEVER add explanations, disclaimers, or non-JSON content
+        - Ensure proper JSON syntax and escaping
+        - Maintain case sensitivity as defined in the schema
+
+        Response must be exclusively the JSON array with no additional text.
+        """]
+        self.system_template = prompt_templates[1]
+
+    def make_prompt(self, prompt='') -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
         if prompt:
             prompt += " {text}"
         else:
             prompt = """Here is a narrative about some impact. Please extract any specific claims:
         {text}"""
-       
+
         return ChatPromptTemplate.from_messages([
             SystemMessagePromptTemplate.from_template(self.system_template),
             HumanMessagePromptTemplate.from_template(prompt)
         ])
-    
-    def extract_claims(self, text: str, prompt = '') -> List[dict[str, Any]]:
+
+    def extract_claims(self, text: str, prompt='') -> List[Dict[str, Any]]:
         """
         Extract claims from the given text.
         
@@ -66,28 +90,30 @@ class ClaimExtractor:
             text: Text to extract claims from
             
         Returns:
-            str: JSON array of extracted claims
+            List[Dict[str, Any]]: JSON array of extracted claims
         """
         prompt = self.make_prompt(prompt)
         messages = prompt.format_messages(text=text)
+        response = None
         try:
-            response = self.llm(messages)
+            response = self.llm.invoke(messages)  
         except TypeError as e:
-            logging.error(f"Failed to authenticate: {str(e)}.  Do you need to use dotenv in caller?")
-        try:
-            return json.loads(response.content)
-        except json.JSONDecodeError as e:
-            # sometimes the LLM insists on prepending some text
-            m = re.match(r'[^\[]+(\[[^\]]+\])[^\]]*$', response.content)
-            if m:
-                try:
-                    return json.loads(m.group(1))
-                except json.JSONDecodeError as e:
-                    pass 
-            logging.info(f"Failed to parse LLM response as JSON: {response.content}")
+            logging.error(f"Failed to authenticate: {str(e)}. Do you need to use dotenv in caller?")
             return []
-    
-    def extract_claims_from_url(self, url: str) -> str:
+        if response:
+            try:
+                return json.loads(response.content)
+            except json.JSONDecodeError as e:
+                m = re.match(r'[^\[]+(\[[^\]]+\])[^\]]*$', response.content)
+                if m:
+                    try:
+                        return json.loads(m.group(1))
+                    except json.JSONDecodeError as e:
+                        pass 
+                logging.info(f"Failed to parse LLM response as JSON: {response.content}")
+        return []
+
+    def extract_claims_from_url(self, url: str) -> List[Dict[str, Any]]:
         """
         Extract claims from text at URL.
         
@@ -95,7 +121,7 @@ class ClaimExtractor:
             url: URL to fetch text from
             
         Returns:
-            str: JSON array of extracted claims
+            List[Dict[str, Any]]: JSON array of extracted claims
         """
         import requests
         response = requests.get(url)
