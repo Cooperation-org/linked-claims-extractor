@@ -162,7 +162,7 @@ score: if claim is a rating, may be set from -1 to 1 as a float, otherwise unset
         Response must be exclusively the JSON array with no additional text.
 
 """
-API_KEY = "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" 
+API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 API_URL = "https://api.anthropic.com/v1/messages"
 def send_prompt_to_claude(prompt):
