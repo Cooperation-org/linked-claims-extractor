@@ -233,11 +233,11 @@ if __name__ == "__main__":
   main(pdf_path, prompt)
 
 
-def default_llm():
-    return  ChatAnthropic(
-               model="claude-3-sonnet-20240229",  # This is the current Sonnet model
-               temperature=0,  # 0 to 1, lower means more deterministic
-               max_tokens=4096)
+# def default_llm():
+#     return  ChatAnthropic(
+#                model="claude-3-sonnet-20240229",  # This is the current Sonnet model
+#                temperature=0,  # 0 to 1, lower means more deterministic
+#                max_tokens=4096)
 
 
-llm = default_llm()
+# llm = default_llm()

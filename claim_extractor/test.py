@@ -6,7 +6,7 @@ import chromadb
 
 extractor = ClaimExtractor()
 # read text from file
-with open("/Users/ziad/Downloads/out-claim/output_sentences.txt", "r", encoding="utf-8") as f:
+with open("your_pdf_path", "r", encoding="utf-8") as f:
     text_file = f.read()
 
 text = """In 2023, Apple announced the release of the iPhone 15, which features an OLED display and a battery that lasts up to 48 hours. However, some experts claim that these features are exaggerated.
