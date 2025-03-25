@@ -18,12 +18,12 @@ In the field of medicine, a recent study has shown that consuming dark chocolate
 Finally, NASA announced the discovery of a new Earth-like planet in a distant solar system. This planet, named "Kepler-452b," could potentially support life."""
 
 
-result = extractor.extract_claims(text_file)
+result = extractor.extract_claims(text)
 print(result)
 
 # save result to json
 if result:
-    with open("/Users/ziad/Downloads/linked-claims-extractor/claim_extractor/output.json", "w", encoding="utf-8") as f:
+    with open("output.json", "w", encoding="utf-8") as f: # change to your path
         json.dump(result, f, indent=4)
 pprint.pprint(result)
 
