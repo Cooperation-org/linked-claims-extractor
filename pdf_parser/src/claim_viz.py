@@ -8,8 +8,9 @@ load_dotenv()
 
 MAX_CHUNKS = 20
 
+
 def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.html"):
-    """Process all chunks and create visualization"""
+    """Process all chunks and create visualization, grouping by page"""
 
     # Get all chunks from ChromaDB in order
     print("Getting chunks from ChromaDB...")
@@ -21,14 +22,30 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
         print(f"First metadata sample: {results['metadatas'][0]}")
     else:
         print("No documents found in collection! Exiting")
-        exit
+        return
     
-    # Sort by page and position
+    # Sort by page and position (if bbox exists)
     chunks_with_metadata = list(zip(
-        results['documents'][0:MAX_CHUNKS], 
-        results['metadatas'][0:MAX_CHUNKS]
+        results['documents'], 
+        results['metadatas']
     ))
-    chunks_with_metadata.sort(key=lambda x: (x[1]['page']))
+    
+    # Sort by page first, then by y-coordinate (top) if bbox exists
+    def sort_key(x):
+        metadata = x[1]
+        if 'bbox' in metadata:
+            return (metadata['page'], metadata['bbox'][1])  # Sort by page, then y-coord
+        return (metadata['page'], 0)  # Default y-coord to 0 if no bbox
+    
+    chunks_with_metadata.sort(key=sort_key)
+    
+    # Group chunks by page
+    pages = {}
+    for text, metadata in chunks_with_metadata:
+        page_num = metadata['page']
+        if page_num not in pages:
+            pages[page_num] = []
+        pages[page_num].append((text, metadata))
     
     # Start HTML document
     html = """
@@ -48,29 +65,30 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
     """
     
     extractor = ClaimExtractor()
-    current_page = -1
     
-    print("Processing chunks and extracting claims...")
-    total_chunks = len(chunks_with_metadata)
-    
-    for i, (text, metadata) in enumerate(chunks_with_metadata):
-        print(f"Processing chunk {i+1}/{total_chunks} on page {metadata['page']}...")
+    print("Processing pages and extracting claims...")
+    for page_num in sorted(pages.keys()):
+        print(f"Processing page {page_num}...")
         
-        # Add page marker if new page
-        if metadata['page'] != current_page:
-            html += f"<div class='page-marker'>Page {metadata['page']}</div>"
-            current_page = metadata['page']
+        # Add page marker
+        html += f"<div class='page-marker'>Page {page_num}</div>"
         
-        # Extract claims
-        claims = extractor.extract_claims(text)
+        # Combine all text on this page
+        page_text = ""
+        for text, metadata in pages[page_num]:
+            if metadata.get('type') == 'text':  # Skip images
+                page_text += text + "\n\n"
+        
+        # Extract claims from combined page text
+        claims = extractor.extract_claims(page_text)
         has_claims = bool(claims)
         
         # Create side-by-side display
         html += f"""
         <div class='container'>
             <div class='text-block {("has-claims" if has_claims else "no-claims")}'>
-                <div class='metadata'>Page {metadata['page']}</div>
-                {text}
+                <div class='metadata'>Page {page_num}</div>
+                {page_text}
             </div>
             <div class='claims-block'>
         """
@@ -84,9 +102,6 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
             html += "<em>No claims detected</em>"
         
         html += "</div></div>"
-        
-        # Add a small delay to avoid rate limiting
-        time.sleep(0.1)
     
     html += "</body></html>"
     
@@ -95,7 +110,6 @@ def process_and_visualize_claims(docmgr, output_file: str = "claims_analysis.htm
         f.write(html)
     
     print(f"\nVisualization saved to {output_file}")
-
 
 
 if __name__ == "__main__":
