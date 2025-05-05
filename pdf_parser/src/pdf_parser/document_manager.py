@@ -25,6 +25,12 @@ class DocumentManager:
         self.image_collection = self.db_manager.get_or_create_collection(f"{self.collection_name}_images")
         print("ChromaDB collections reset complete")
 
+    def process_pdf_all_or_pages(self, pdf_path: str, type: str = "all"):
+        if type == "all":
+            return self.processor.extract_text_from_pdf(pdf_path)
+        else:
+            return self.processor.extract_text_from_pdf_per_page(pdf_path)
+    
     def process_pdf(self, pdf_path: str, reset: bool = False):
         """Process PDF and add to collections"""
         if reset:

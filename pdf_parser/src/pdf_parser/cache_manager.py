@@ -36,10 +36,11 @@ class PDFProcessingCache:
     
     def update_metadata(self, filepath: str, pdf_name: str):
         """Save processing metadata"""
+        filepath_str = str(filepath)
         metadata = {
-            'file_hash': self.get_file_hash(filepath),
+            'file_hash': self.get_file_hash(filepath_str),
             'last_processed': datetime.now().isoformat(),
-            'filepath': filepath
+            'filepath': filepath_str
         }
         
         with open(os.path.join(self.cache_dir, f"{pdf_name}_meta.json"), 'w') as f:
