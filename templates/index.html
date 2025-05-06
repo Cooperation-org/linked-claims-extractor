@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedClaims Extractor Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #0066cc;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+        }
+        .container {
+            margin-top: 2rem;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            font-weight: bold;
+            background-color: #f1f8ff;
+        }
+        .claim-card {
+            border-left: 4px solid #28a745;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+        .claim-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+        .claim-card.selected {
+            border-left: 4px solid #007bff;
+            background-color: #f8f9ff;
+        }
+        .claim-highlight {
+            background-color: #e6ffe6;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        .btn-primary {
+            background-color: #0066cc;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        .step.active .step-number {
+            background-color: #0066cc;
+            color: white;
+        }
+        .step.completed .step-number {
+            background-color: #28a745;
+            color: white;
+        }
+        .step-line {
+            position: absolute;
+            top: 15px;
+            height: 2px;
+            width: 100%;
+            background-color: #e9ecef;
+            left: 50%;
+        }
+        .step:last-child .step-line {
+            display: none;
+        }
+        .pdf-preview {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            padding: 1rem;
+            background-color: white;
+        }
+        .source-text {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .badge-confidence {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        #publishResults {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .verified-badge {
+            background-color: #28a745;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+        .invalid-badge {
+            background-color: #dc3545;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                LinkedClaims Extractor Demo
+            </a>
+            <span class="navbar-text text-light">
+                Gates Foundation Report Analysis
+            </span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-line"></div>
+                <div class="step-title">Upload</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-line"></div>
+                <div class="step-title">Extract</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-line"></div>
+                <div class="step-title">Review</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-line"></div>
+                <div class="step-title">Sign</div>
+            </div>
+            <div class="step" id="step5">
+                <div class="step-number">5</div>
+                <div class="step-title">Publish</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Upload -->
+        <div class="tab-content" id="step1Content">
+            <div class="card">
+                <div class="card-header">
+                    Upload Report
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Upload the Gates Foundation year-end report PDF to begin the extraction process.</p>
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label for="pdfFile" class="form-label">Select PDF File</label>
+                            <input class="form-control" type="file" id="pdfFile" accept=".pdf">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload and Process</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Extract -->
+        <div class="tab-content" id="step2Content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    Extract Claims
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>PDF Preview</h5>
+                            <div class="pdf-preview" id="pdfPreview">
+                                <p class="text-muted">PDF content will appear here...</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Extraction Progress</h5>
+                            <div class="progress mb-3">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="extractionProgress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="extractionStatus">Waiting to begin extraction...</div>
+                            <button id="startExtraction" class="btn btn-primary mt-3">Start Extraction</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div class="tab-content" id="step3Content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    Review Extracted Claims
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h5>Extracted Claims (<span id="claimCount">0</span>)</h5>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Search claims..." id="searchClaims">
+                                <button class="btn btn-outline-secondary" type="button">Search</button>
+                            </div>
+                            <div id="claimsList" style="max-height: 500px; overflow-y: auto;"></div>
+                        </div>
+                        <div class="col-md-7">
+                            <h5>Claim Details</h5>
+                            <div id="claimDetails">
+                                <div class="alert alert-info">Select a claim to view details</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button id="backToExtract" class="btn btn-secondary">Back</button>
+                        <button id="proceedToSign" class="btn btn-primary">Proceed to Signing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Sign -->
+        <div class="tab-content" id="step4Content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    Sign Claims
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Review the final claims that will be signed and published to the LinkedTrust platform.</p>
+                    
+                    <h5>Claims to be Signed (<span id="selectedClaimCount">0</span>)</h5>
+                    <div id="selectedClaimsList" style="max-height: 300px; overflow-y: auto;">
+                        <div class="alert alert-info">No claims selected for signing</div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <h5>Signing Configuration</h5>
+                        <div class="mb-3">
+                            <label for="signingKey" class="form-label">Signing Key</label>
+                            <select class="form-control" id="signingKey">
+                                <option value="default">Default Server Key</option>
+                                <option value="upload">Upload Custom Key</option>
+                            </select>
+                        </div>
+                        <div id="customKeyUpload" style="display: none;">
+                            <div class="mb-3">
+                                <label for="privateKeyFile" class="form-label">Upload Private Key (PEM)</label>
+                                <input class="form-control" type="file" id="privateKeyFile">
+                            </div>
+                            <div class="mb-3">
+                                <label for="keyPassword" class="form-label">Key Password (if encrypted)</label>
+                                <input type="password" class="form-control" id="keyPassword">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3">
+                        <button id="backToReview" class="btn btn-secondary">Back</button>
+                        <button id="signClaims" class="btn btn-primary">Sign Claims</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Publish -->
+        <div class="tab-content" id="step5Content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    Publish to LinkedTrust
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Publish the signed claims to the LinkedTrust platform.</p>
+                    
+                    <div class="mb-3">
+                        <h5>API Configuration</h5>
+                        <div class="mb-3">
+                            <label for="apiKey" class="form-label">LinkedTrust API Key</label>
+                            <input type="password" class="form-control" id="apiKey" placeholder="Enter API key">
+                        </div>
+                        <div class="mb-3">
+                            <label for="apiEndpoint" class="form-label">API Endpoint</label>
+                            <input type="text" class="form-control" id="apiEndpoint" value="https://live.linkedtrust.us/api/v1/claims">
+                        </div>
+                    </div>
+                    
+                    <h5>Signed Claims to Publish (<span id="signedClaimCount">0</span>)</h5>
+                    <div id="signedClaimsList" style="max-height: 200px; overflow-y: auto;">
+                        <div class="alert alert-info">No signed claims to publish</div>
+                    </div>
+                    
+                    <button id="publishClaims" class="btn btn-success mt-3">Publish Claims</button>
+                    
+                    <div class="mt-3">
+                        <h5>Publication Results</h5>
+                        <div id="publishResults" class="border p-3 bg-light">
+                            <div class="alert alert-info">Claims have not been published yet</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3">
+                        <button id="backToSign" class="btn btn-secondary">Back</button>
+                        <button id="viewInLinkedTrust" class="btn btn-primary" disabled>View in LinkedTrust</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Modal for Claim Editing -->
+    <div class="modal fade" id="editClaimModal" tabindex="-1" aria-labelledby="editClaimModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClaimModalLabel">Edit Claim</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editClaimForm">
+                        <div class="mb-3">
+                            <label for="editSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="editSubject">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editClaim" class="form-label">Claim Type</label>
+                            <select class="form-control" id="editClaim">
+                                <option value="impact">impact</option>
+                                <option value="rated">rated</option>
+                                <option value="same_as">same_as</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStatement" class="form-label">Statement</label>
+                            <textarea class="form-control" id="editStatement" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAspect" class="form-label">Aspect</label>
+                            <input type="text" class="form-control" id="editAspect">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editAmount" class="form-label">Amount</label>
+                                    <input type="number" class="form-control" id="editAmount">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editUnit" class="form-label">Unit</label>
+                                    <input type="text" class="form-control" id="editUnit">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDate" class="form-label">Effective Date</label>
+                            <input type="date" class="form-control" id="editDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editConfidence" class="form-label">Confidence (0-1)</label>
+                            <input type="range" class="form-range" min="0" max="1" step="0.05" id="editConfidence">
+                            <div class="text-center" id="confidenceValue">0.5</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSource" class="form-label">Source URI</label>
+                            <input type="text" class="form-control" id="editSource">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveClaimChanges">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // State management
+            const state = {
+                currentStep: 1,
+                uploadedFile: null,
+                extractedClaims: [],
+                selectedClaims: [],
+                signedClaims: [],
+                publishResults: null,
+                claimDetail: null
+            };
+            
+            // Step navigation
+            const goToStep = (stepNumber) => {
+                // Hide all steps
+                document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+                
+                // Show the target step
+                document.getElementById(`step${stepNumber}Content`).style.display = 'block';
+                
+                // Update step indicators
+                document.querySelectorAll('.step').forEach((step, index) => {
+                    if (index + 1 < stepNumber) {
+                        step.classList.add('completed');
+                        step.classList.remove('active');
+                    } else if (index + 1 === stepNumber) {
+                        step.classList.add('active');
+                        step.classList.remove('completed');
+                    } else {
+                        step.classList.remove('active', 'completed');
+                    }
+                });
+                
+                state.currentStep = stepNumber;
+            };
+
+            // Upload Form
+            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const fileInput = document.getElementById('pdfFile');
+                if (fileInput.files.length === 0) {
+                    alert('Please select a PDF file');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please select a PDF file');
+                    return;
+                }
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // Upload the file
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        state.uploadedFile = data;
+                        
+                        // Show loading state
+                        document.getElementById('pdfPreview').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div><p>Loading PDF preview...</p></div>';
+                        
+                        // Go to step 2
+                        goToStep(2);
+                        
+                        // Normally we'd load the PDF preview here
+                        // For this demo, we'll just show a placeholder
+                        setTimeout(() => {
+                            document.getElementById('pdfPreview').innerHTML = `
+                                <div class="alert alert-success">
+                                    <strong>File uploaded successfully:</strong> ${file.name}
+                                </div>
+                                <p>PDF preview would be shown here in the actual implementation.</p>
+                            `;
+                        }, 1000);
+                    } else {
+                        alert('Error uploading file: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error uploading file. Please try again.');
+                });
+            });
+
+            // Extract Claims
+            document.getElementById('startExtraction').addEventListener('click', function() {
+                if (!state.uploadedFile) {
+                    alert('No file uploaded. Please go back and upload a file.');
+                    return;
+                }
+                
+                const progressBar = document.getElementById('extractionProgress');
+                const statusText = document.getElementById('extractionStatus');
+                
+                // Start extraction
+                statusText.textContent = 'Starting extraction...';
+                progressBar.style.width = '5%';
+                
+                // Call the extract endpoint
+                fetch('/extract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filepath: state.uploadedFile.filepath
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        state.extractedClaims = data.claims;
+                        
+                        // Update progress
+                        progressBar.style.width = '100%';
+                        statusText.textContent = `Extraction complete! Found ${data.total} claims.`;
+                        
+                        // Wait a moment before moving to next step
+                        setTimeout(() => {
+                            goToStep(3);
+                            renderClaimsList(state.extractedClaims);
+                        }, 500);
+                    } else {
+                        alert('Error extracting claims: ' + data.error);
+                        progressBar.style.width = '0%';
+                        statusText.textContent = 'Extraction failed. Please try again.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error extracting claims. Please try again.');
+                    progressBar.style.width = '0%';
+                    statusText.textContent = 'Extraction failed. Please try again.';
+                });
+                
+                // Simulate progress updates
+                let progress = 5;
+                const interval = setInterval(() => {
+                    if (progress >= 95) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    
+                    progress += 5;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress < 30) {
+                        statusText.textContent = 'Processing PDF pages...';
+                    } else if (progress < 60) {
+                        statusText.textContent = 'Extracting text content...';
+                    } else if (progress < 90) {
+                        statusText.textContent = 'Identifying claims with Claude...';
+                    }
+                }, 500);
+            });
+
+            // Render Claims List
+            const renderClaimsList = (claims) => {
+                const claimsListEl = document.getElementById('claimsList');
+                document.getElementById('claimCount').textContent = claims.length;
+                
+                claimsListEl.innerHTML = '';
+                
+                if (claims.length === 0) {
+                    claimsListEl.innerHTML = '<div class="alert alert-info">No claims found</div>';
+                    return;
+                }
+                
+                claims.forEach(claim => {
+                    const claimCard = document.createElement('div');
+                    claimCard.className = 'card claim-card';
+                    claimCard.setAttribute('data-claim-id', claim.id);
+                    
+                    let aspectBadge = '';
+                    if (claim.aspect) {
+                        const aspectClass = claim.aspect.includes('impact') ? 'bg-success' : 'bg-info';
+                        aspectBadge = `<span class="badge ${aspectClass}">${claim.aspect}</span>`;
+                    }
+                    
+                    let amountText = '';
+                    if (claim.amt) {
+                        amountText = ` - ${claim.amt.toLocaleString()} ${claim.unit || ''}`;
+                    }
+                    
+                    let validationBadge = '';
+                    if (claim.validation) {
+                        if (claim.validation.is_valid) {
+                            validationBadge = '<span class="verified-badge"><i class="bi bi-check-circle"></i> Valid</span>';
+                        } else {
+                            validationBadge = '<span class="invalid-badge"><i class="bi bi-exclamation-triangle"></i> Invalid</span>';
+                        }
+                    }
+                    
+                    claimCard.innerHTML = `
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="card-title mb-1">${claim.subject} ${validationBadge}</h6>
+                                <span class="badge badge-confidence bg-primary">${(claim.confidence * 100).toFixed(0)}%</span>
+                            </div>
+                            <p class="card-text mb-1">${claim.statement.substring(0, 100)}${claim.statement.length > 100 ? '...' : ''}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                ${aspectBadge}
+                                <small class="text-muted">${claim.claim}${amountText}</small>
+                            </div>
+                        </div>
+                    `;
+                    
+                    claimCard.addEventListener('click', () => {
+                        state.claimDetail = claim;
+                        showClaimDetails(claim);
+                    });
+                    
+                    claimsListEl.appendChild(claimCard);
+                });
+            };
+
+            // Show Claim Details
+            const showClaimDetails = (claim) => {
+                // Mark selected claim
+                document.querySelectorAll('.claim-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                const selectedCard = document.querySelector(`.claim-card[data-claim-id="${claim.id}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('selected');
+                }
+                
+                const detailsEl = document.getElementById('claimDetails');
+                
+                let amountDisplay = '';
+                if (claim.amt) {
+                    amountDisplay = `
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <div>${claim.amt.toLocaleString()} ${claim.unit || ''}</div>
+                        </div>
+                    `;
+                }
+                
+                let dateDisplay = '';
+                if (claim.effectiveDate) {
+                    const date = new Date(claim.effectiveDate);
+                    dateDisplay = `
+                        <div class="mb-3">
+                            <label class="form-label">Effective Date</label>
+                            <div>${date.toLocaleDateString()}</div>
+                        </div>
+                    `;
+                }
+                
+                let validationSection = '';
+                if (claim.validation) {
+                    const validClass = claim.validation.is_valid ? 'text-success' : 'text-danger';
+                    const validIcon = claim.validation.is_valid ? 'bi-check-circle' : 'bi-exclamation-triangle';
+                    
+                    let validationIssues = '';
+                    if (!claim.validation.is_valid) {
+                        const issues = [];
+                        if (claim.validation.missing_fields.length > 0) {
+                            issues.push(`Missing fields: ${claim.validation.missing_fields.join(', ')}`);
+                        }
+                        if (!claim.validation.valid_claim_type) {
+                            issues.push('Invalid claim type');
+                        }
+                        
+                        validationIssues = `
+                            <div class="alert alert-danger">
+                                <strong>Validation Issues:</strong>
+                                <ul class="mb-0">
+                                    ${issues.map(issue => `<li>${issue}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    validationSection = `
+                        <div class="mb-3">
+                            <label class="form-label">Validation</label>
+                            <div class="${validClass}">
+                                <i class="bi ${validIcon}"></i> 
+                                ${claim.validation.is_valid ? 'Valid' : 'Invalid'}
+                            </div>
+                            ${validationIssues}
+                        </div>
+                    `;
+                }
+                
+                detailsEl.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${claim.subject}</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary edit-claim-btn" data-bs-toggle="modal" data-bs-target="#editClaimModal" data-claim-id="${claim.id}">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <div class="form-check form-switch d-inline-block ms-2">
+                                        <input class="form-check-input" type="checkbox" id="claim${claim.id}Select" checked>
+                                        <label class="form-check-label" for="claim${claim.id}Select">Include</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Source Text</label>
+                                <div class="source-text">${claim.sourceText ? claim.sourceText.substring(0, 500) + (claim.sourceText.length > 500 ? '...' : '') : 'No source text available'}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Extracted Claim</label>
+                                <div class="claim-highlight">${claim.statement}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Claim Type</label>
+                                        <div>${claim.claim}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Aspect</label>
+                                        <div>${claim.aspect || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            ${amountDisplay}
+                            ${dateDisplay}
+                            <div class="mb-3">
+                                <label class="form-label">Confidence</label>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: ${claim.confidence * 100}%" 
+                                        aria-valuenow="${claim.confidence * 100}" aria-valuemin="0" aria-valuemax="100">
+                                        ${(claim.confidence * 100).toFixed(0)}%
+                                    </div>
+                                </div>
+                            </div>
+                            ${validationSection}
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listener for edit button
+                detailsEl.querySelector('.edit-claim-btn').addEventListener('click', () => {
+                    populateEditForm(claim);
+                });
+                
+                // Add event listener for include checkbox
+                const includeCheckbox = document.getElementById(`claim${claim.id}Select`);
+                includeCheckbox.checked = state.selectedClaims.some(c => c.id === claim.id);
+                
+                includeCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Add to selected claims if not already present
+                        if (!state.selectedClaims.some(c => c.id === claim.id)) {
+                            state.selectedClaims.push(claim);
+                        }
+                    } else {
+                        // Remove from selected claims
+                        state.selectedClaims = state.selectedClaims.filter(c => c.id !== claim.id);
+                    }
+                });
+            };
+            
+            // Populate edit form with claim data
+            const populateEditForm = (claim) => {
+                document.getElementById('editSubject').value = claim.subject || '';
+                document.getElementById('editClaim').value = claim.claim || 'impact';
+                document.getElementById('editStatement').value = claim.statement || '';
+                document.getElementById('editAspect').value = claim.aspect || '';
+                document.getElementById('editAmount').value = claim.amt || '';
+                document.getElementById('editUnit').value = claim.unit || '';
+                
+                if (claim.effectiveDate) {
+                    const date = new Date(claim.effectiveDate);
+                    document.getElementById('editDate').value = date.toISOString().split('T')[0];
+                } else {
+                    document.getElementById('editDate').value = '';
+                }
+                
+                const confidenceSlider = document.getElementById('editConfidence');
+                confidenceSlider.value = claim.confidence || 0.5;
+                document.getElementById('confidenceValue').textContent = confidenceSlider.value;
+                
+                document.getElementById('editSource').value = claim.sourceURI || '';
+                
+                // Update confidence display on slider change
+                confidenceSlider.addEventListener('input', function() {
+                    document.getElementById('confidenceValue').textContent = this.value;
+                });
+                
+                // Save changes button
+                document.getElementById('saveClaimChanges').onclick = function() {
+                    // Get values from form
+                    const updatedClaim = {
+                        ...claim,
+                        subject: document.getElementById('editSubject').value,
+                        claim: document.getElementById('editClaim').value,
+                        statement: document.getElementById('editStatement').value,
+                        aspect: document.getElementById('editAspect').value,
+                        amt: document.getElementById('editAmount').value ? parseInt(document.getElementById('editAmount').value) : undefined,
+                        unit: document.getElementById('editUnit').value,
+                        confidence: parseFloat(document.getElementById('editConfidence').value),
+                        sourceURI: document.getElementById('editSource').value
+                    };
+                    
+                    // Get date if set
+                    const dateValue = document.getElementById('editDate').value;
+                    if (dateValue) {
+                        updatedClaim.effectiveDate = new Date(dateValue).toISOString();
+                    }
+                    
+                    // Update in state
+                    const index = state.extractedClaims.findIndex(c => c.id === claim.id);
+                    if (index !== -1) {
+                        state.extractedClaims[index] = updatedClaim;
+                    }
+                    
+                    // Update in selected claims if present
+                    const selectedIndex = state.selectedClaims.findIndex(c => c.id === claim.id);
+                    if (selectedIndex !== -1) {
+                        state.selectedClaims[selectedIndex] = updatedClaim;
+                    }
+                    
+                    // Update current detail view
+                    if (state.claimDetail && state.claimDetail.id === claim.id) {
+                        state.claimDetail = updatedClaim;
+                        showClaimDetails(updatedClaim);
+                    }
+                    
+                    // Rerender claims list
+                    renderClaimsList(state.extractedClaims);
+                    
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editClaimModal'));
+                    modal.hide();
+                };
+            };
+            
+            // Handle custom key upload toggle
+            document.getElementById('signingKey').addEventListener('change', function() {
+                document.getElementById('customKeyUpload').style.display = 
+                    this.value === 'upload' ? 'block' : 'none';
+            });
+            
+            // Review navigation
+            document.getElementById('backToExtract').addEventListener('click', () => goToStep(2));
+            
+            // Proceed to Sign
+            document.getElementById('proceedToSign').addEventListener('click', () => {
+                // Make sure some claims are selected
+                if (state.selectedClaims.length === 0) {
+                    // Preselect all claims if none are selected
+                    state.selectedClaims = [...state.extractedClaims];
+                }
+                
+                // Validate claims
+                fetch('/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        claims: state.selectedClaims
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update claims with validation results
+                        state.selectedClaims = data.validated_claims;
+                        
+                        // Show validation summary
+                        const validCount = data.summary.valid;
+                        const invalidCount = data.summary.invalid;
+                        
+                        if (invalidCount > 0) {
+                            if (!confirm(`${invalidCount} out of ${data.summary.total} claims have validation issues. Continue anyway?`)) {
+                                return;
+                            }
+                        }
+                        
+                        // Proceed to signing step
+                        goToStep(4);
+                        
+                        // Render selected claims
+                        renderSelectedClaims();
+                    } else {
+                        alert('Error validating claims: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error validating claims. Please try again.');
+                });
+            });
+            
+            // Render selected claims
+            const renderSelectedClaims = () => {
+                const selectedClaimsEl = document.getElementById('selectedClaimsList');
+                document.getElementById('selectedClaimCount').textContent = state.selectedClaims.length;
+                
+                selectedClaimsEl.innerHTML = '';
+                
+                if (state.selectedClaims.length === 0) {
+                    selectedClaimsEl.innerHTML = '<div class="alert alert-info">No claims selected for signing</div>';
+                    return;
+                }
+                
+                state.selectedClaims.forEach(claim => {
+                    const claimEl = document.createElement('div');
+                    claimEl.className = 'card mb-2';
+                    
+                    let validBadge = '';
+                    if (claim.validation) {
+                        if (claim.validation.is_valid) {
+                            validBadge = '<span class="verified-badge"><i class="bi bi-check-circle"></i> Valid</span>';
+                        } else {
+                            validBadge = '<span class="invalid-badge"><i class="bi bi-exclamation-triangle"></i> Invalid</span>';
+                        }
+                    }
+                    
+                    claimEl.innerHTML = `
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>${claim.subject}</strong> ${validBadge}<br>
+                                    <small>${claim.statement.substring(0, 100)}${claim.statement.length > 100 ? '...' : ''}</small>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input claim-include" type="checkbox" id="sign${claim.id}" checked data-claim-id="${claim.id}">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    selectedClaimsEl.appendChild(claimEl);
+                });
+                
+                // Add event listeners to checkboxes
+                document.querySelectorAll('.claim-include').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const claimId = parseInt(this.getAttribute('data-claim-id'));
+                        if (!this.checked) {
+                            // Remove from selected claims
+                            state.selectedClaims = state.selectedClaims.filter(c => c.id !== claimId);
+                            document.getElementById('selectedClaimCount').textContent = state.selectedClaims.length;
+                        }
+                    });
+                });
+            };
+            
+            // Sign navigation
+            document.getElementById('backToReview').addEventListener('click', () => goToStep(3));
+            
+            // Sign Claims
+            document.getElementById('signClaims').addEventListener('click', () => {
+                if (state.selectedClaims.length === 0) {
+                    alert('No claims selected for signing');
+                    return;
+                }
+                
+                // Call the sign endpoint
+                fetch('/sign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        claims: state.selectedClaims
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        state.signedClaims = data.signed_claims;
+                        
+                        // Go to publish step
+                        goToStep(5);
+                        
+                        // Render signed claims
+                        renderSignedClaims();
+                    } else {
+                        alert('Error signing claims: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error signing claims. Please try again.');
+                });
+            });
+            
+            // Render signed claims
+            const renderSignedClaims = () => {
+                const signedClaimsEl = document.getElementById('signedClaimsList');
+                document.getElementById('signedClaimCount').textContent = state.signedClaims.length;
+                
+                signedClaimsEl.innerHTML = '';
+                
+                if (state.signedClaims.length === 0) {
+                    signedClaimsEl.innerHTML = '<div class="alert alert-info">No signed claims to publish</div>';
+                    return;
+                }
+                
+                state.signedClaims.forEach(claim => {
+                    const claimEl = document.createElement('div');
+                    claimEl.className = 'card mb-2';
+                    
+                    claimEl.innerHTML = `
+                        <div class="card-body py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>${claim.subject}</strong><br>
+                                    <small>${claim.statement.substring(0, 100)}${claim.statement.length > 100 ? '...' : ''}</small>
+                                </div>
+                                <div>
+                                    <span class="verified-badge"><i class="bi bi-shield-check"></i> Signed</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    signedClaimsEl.appendChild(claimEl);
+                });
+            };
+            
+            // Publish navigation
+            document.getElementById('backToSign').addEventListener('click', () => goToStep(4));
+            
+            // Publish Claims
+            document.getElementById('publishClaims').addEventListener('click', () => {
+                if (state.signedClaims.length === 0) {
+                    alert('No signed claims to publish');
+                    return;
+                }
+                
+                const apiKey = document.getElementById('apiKey').value;
+                if (!apiKey) {
+                    alert('Please enter an API key');
+                    return;
+                }
+                
+                const apiEndpoint = document.getElementById('apiEndpoint').value;
+                if (!apiEndpoint) {
+                    alert('Please enter an API endpoint');
+                    return;
+                }
+                
+                // Call the publish endpoint
+                fetch('/publish', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        api_key: apiKey,
+                        endpoint: apiEndpoint,
+                        claims: state.signedClaims
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        state.publishResults = data;
+                        
+                        // Update results display
+                        renderPublishResults(data);
+                        
+                        // Enable view button
+                        document.getElementById('viewInLinkedTrust').disabled = false;
+                    } else {
+                        alert('Error publishing claims: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error publishing claims. Please try again.');
+                });
+            });
+            
+            // Render publish results
+            const renderPublishResults = (data) => {
+                const resultsEl = document.getElementById('publishResults');
+                
+                let successCount = data.summary.success;
+                let failureCount = data.summary.failure;
+                
+                resultsEl.innerHTML = `
+                    <div class="alert ${successCount > 0 ? 'alert-success' : 'alert-danger'}">
+                        <strong>Publication Results:</strong> ${successCount} successful, ${failureCount} failed
+                    </div>
+                `;
+                
+                if (data.results && data.results.length > 0) {
+                    const resultsList = document.createElement('div');
+                    
+                    data.results.forEach((result, index) => {
+                        const resultEl = document.createElement('div');
+                        resultEl.className = `card mb-2 ${result.success ? 'border-success' : 'border-danger'}`;
+                        
+                        resultEl.innerHTML = `
+                            <div class="card-body py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>${result.claim.subject}</strong><br>
+                                        <small>${result.success ? 'Successfully published' : 'Failed: ' + result.error}</small>
+                                    </div>
+                                    <div>
+                                        ${result.success ? 
+                                            `<span class="badge bg-success">ID: ${result.result.id || 'N/A'}</span>` : 
+                                            '<span class="badge bg-danger">Failed</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        resultsList.appendChild(resultEl);
+                    });
+                    
+                    resultsEl.appendChild(resultsList);
+                }
+                
+                // Enable view button if any claims were published successfully
+                document.getElementById('viewInLinkedTrust').disabled = successCount === 0;
+                
+                // Add event listener to view button
+                document.getElementById('viewInLinkedTrust').onclick = function() {
+                    window.open('https://live.linkedtrust.us/claims');
+                };
+            };
+            
+            // Search functionality
+            document.getElementById('searchClaims').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (!searchTerm) {
+                    renderClaimsList(state.extractedClaims);
+                    return;
+                }
+                
+                const filteredClaims = state.extractedClaims.filter(claim => {
+                    return (
+                        (claim.subject && claim.subject.toLowerCase().includes(searchTerm)) ||
+                        (claim.statement && claim.statement.toLowerCase().includes(searchTerm)) ||
+                        (claim.aspect && claim.aspect.toLowerCase().includes(searchTerm))
+                    );
+                });
+                
+                renderClaimsList(filteredClaims);
+            });
+        });
+    </script>
+</body>
+</html>
