@@ -1,109 +1,80 @@
-# LinkedClaims Extractor Frontend Flow
+# LinkedClaims Extractor MVP Roadmap
 
 ## Overview
-This roadmap outlines the user flow for the LinkedClaims Extractor frontend, designed to extract verifiable claims from PDF documents and facilitate validation through the LinkedTrust platform.
 
-## Flow Design
+This roadmap outlines the implementation plan for the LinkedClaims Extractor MVP, taking into account the existing progress in the integration branch. The MVP will deliver a complete flow from PDF upload to validation, demonstrating the practical application of the LinkedClaims specification.
+
+## Current Status (Integration Branch)
+
+The integration branch already includes:
+- Basic PDF text extraction functionality
+- Initial claim identification logic
+- LinkedTrust API client integration
+- Flask-based demo application
+- Authentication with the LinkedTrust backend
+
+## Frontend Flow Design
 
 ### 1. PDF Upload & Processing
-
-- **Simple Upload Interface**: Single-page with drag-drop and file select
-  - Clean, minimal design with clear instructions
-  - Support for multiple file formats (primarily PDF)
-
-- **Processing Feedback**: Clear indication of PDF parsing progress
-  - Progress bar showing parsing status
-  - Cancel option for large documents
-
-- **Document Preview**: Show the parsed content in chunks for review
-  - Collapsible sections by page or logical divisions
-  - Highlight potential claims in the text
+- **Simple Upload Interface**: Clean, single-page with drag-drop functionality
+- **Processing Feedback**: Progress indicators during PDF parsing
+- **Document Preview**: Display parsed content in reviewable chunks
+- **Status**: Partially implemented, needs UI improvements
 
 ### 2. Claim Extraction & Review
-
-- **Automatic Extraction**: System identifies potential claims using NLP/patterns
-  - Focus on funding amounts, impact metrics, and program descriptions
-  - Confidence scoring for each extracted claim
-
-- **Interactive Review**: User can:
-  - View each extracted claim
-  - Edit claim details if needed
-  - Add manual claims for items missed by automation
-  - Delete false positives
-
-- **Batch Operations**: Select multiple claims for publishing
-  - Bulk edit capabilities for common fields
-  - Filtering and sorting options
+- **Automatic Extraction**: NLP-based identification of claims from text
+- **Interactive Review**: User-friendly interface to review, edit, and manage extracted claims
+- **Batch Selection**: Allow users to select multiple claims for publishing
+- **Status**: Basic extraction exists, needs better UI for review/editing
 
 ### 3. Claim Publishing
-
-- **Authentication**: Connect to LinkedTrust account
-  - Simple login/token authorization
-  - Remember session for repeat usage
-
-- **Batch Publish**: Send selected claims to LinkedTrust backend
-  - Preview of claims before final submission
-  - Option to save draft claims for later
-
-- **Publish Feedback**: Show success/failure status for each claim
-  - Clear success/error messages
-  - Retry options for failed submissions
+- **Authentication**: User authentication with LinkedTrust backend
+- **Batch Publishing**: Send selected claims to the LinkedTrust API
+- **Publish Feedback**: Clear success/failure indicators
+- **Status**: API integration exists, needs better error handling and UI feedback
 
 ### 4. Validation Request Generation
-
-- **Validator Selection**: Enter email addresses for validators
-  - Import contacts or manual entry
-  - Group validators by role or relationship to claim
-
+- **Validator Selection**: Interface to specify validators for claims
 - **Link Generation**: Create unique validation links for each claim
-  - Secure, time-limited validation URLs
-  - Preview of validation page
-
-- **Communication**: Send validation requests via email or generate shareable links
-  - Customizable email templates
-  - Copy-paste links for manual sharing
+- **Communication Tools**: Templates for sharing validation requests
+- **Status**: Not implemented yet
 
 ### 5. Validation Tracking
-
 - **Status Dashboard**: View validation status of published claims
-  - Visual indicators of validation progress
-  - Filtering by validation status
+- **Response Collection**: Display validator feedback
+- **Status**: Not implemented yet
 
-- **Response Collection**: Collect and display validator responses
-  - Aggregate validation results
-  - Display individual validator feedback
+## 3-Day Implementation Plan
 
-- **Feedback Incorporation**: Update claim status based on validations
-  - Confidence scoring adjusted by validations
-  - Flag conflicting validations for review
+### Day 1: Core Functionality & UI Improvements
+1. Enhance PDF upload interface with better feedback
+2. Improve claim extraction visualization
+3. Add claim editing capabilities
+4. Ensure proper authentication with dev.linkedtrust.us
 
-## Implementation Priority
+### Day 2: Publishing & Validation Link Generation
+1. Implement batch selection and publishing
+2. Create validation link generation functionality
+3. Develop email templates for validation requests
+4. Build simple validation UI page
 
-For the 3-day MVP development:
-
-1. **Day 1**: PDF Upload, Processing, and Basic Claim Extraction
-   - Implement file upload and parsing
-   - Basic claim identification logic
-   - Simple claim display
-
-2. **Day 2**: Claim Review, Editing, and Publishing
-   - Claim editing interface
-   - Integration with LinkedTrust API
-   - Publishing functionality
-
-3. **Day 3**: Validation Flow and Polish
-   - Validation link generation
-   - Email template for validators
-   - Simple validation page
-   - Final testing and bug fixes
+### Day 3: Validation Flow & Polish
+1. Complete validation submission functionality
+2. Add validation tracking dashboard
+3. Polish UI for demonstration
+4. Test end-to-end flow with real PDFs
+5. Document usage and prepare demo materials
 
 ## Success Criteria
+- Complete flow from PDF upload to claim validation
+- Successfully extract at least 3 types of claims (funding, impact, etc.)
+- Generate validation links that work on mobile devices
+- Record validation responses back to LinkedTrust backend
+- Clean, intuitive UI suitable for demonstration
 
-The MVP should demonstrate:
-
-1. Successfully extracting at least 3 types of claims from a sample PDF
-2. Publishing claims to the LinkedTrust backend
-3. Generating validation links that can be shared with validators
-4. Collecting and displaying validation responses
-
-This implementation focuses on creating a functional end-to-end flow rather than perfecting each component, allowing for rapid demonstration and feedback.
+## Next Steps (Post-MVP)
+- Improve NLP for more accurate claim extraction
+- Support additional document formats
+- Add batch processing capabilities
+- Implement dashboard for tracking validation statistics
+- Integrate video testimonial capabilities
