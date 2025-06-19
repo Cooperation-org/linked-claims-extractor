@@ -4,3 +4,4 @@ urllib3==2.2.3
 python-dotenv==1.0.1
 linked-claims-extractor>=0.1.6
 requests>=2.32.3
+PyJWT>=2.8.0
