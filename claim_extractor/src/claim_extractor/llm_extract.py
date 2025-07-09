@@ -2,18 +2,17 @@ import json
 import re
 import logging
 from typing import List, Dict, Any, Optional
-
+import os
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain.base_language import BaseLanguageModel
-
 from .schemas.loader import load_schema_info, LINKED_TRUST
 
 def default_llm():
     return ChatAnthropic(
-        model="claude-3-sonnet-20240229",  # This is the current Sonnet model
+        model=os.getenv("CLAUDE_MODEL"),  # This is the current Sonnet model
         temperature=0,  # 0 to 1, lower means more deterministic
-        max_tokens=4096)
+        max_tokens=os.getenv("CLAUDE_MAX_TOKENS", 4096))
 
 class ClaimExtractor:
     def __init__(

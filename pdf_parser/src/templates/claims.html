@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}Claims - Claim Extractor{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Claims</h2>
+    <div class="d-flex gap-2">
+        <input type="text" class="form-control" placeholder="Search for Claims" value="{{ search_query }}" id="searchInput" style="width: 300px;">
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" href="{{ url_for('view_claims', status='all', search=search_query) }}">
+            All Claims
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if status_filter == 'draft' %}active{% endif %}" href="{{ url_for('view_claims', status='draft', search=search_query) }}">
+            Draft
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if status_filter == 'published' %}active{% endif %}" href="{{ url_for('view_claims', status='published', search=search_query) }}">
+            Published
+        </a>
+    </li>
+</ul>
+
+<p class="text-muted">{{ total_count }} claims found</p>
+
+<!-- Claims List -->
+{% for claim_id, data in extracted_claims.items() %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h6 class="mb-1">{{ data.original_filename }} ({{ data.claims|length }})</h6>
+            <small class="text-muted">
+                Claim: Uploaded, {{ data.upload_time[:10] }}
+            </small>
+            <br>
+            <small class="text-muted">
+                Claim extracted from uploaded PDF file: {{ data.filename }}
+            </small>
+        </div>
+        <div class="d-flex gap-2">
+            <!-- Publish All Button -->
+            <button class="btn btn-publish" onclick="publishAllClaims('{{ claim_id }}')">
+                <i class="fas fa-paper-plane me-2"></i>
+                Publish All to LinkedTrust
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="claims-{{ claim_id }}">
+            {% for claim in data.claims %}
+            <div class="border-start border-3 {% if claim.get('status') == 'published' %}border-success{% elif claim.get('status') == 'failed' %}border-danger{% else %}border-info{% endif %} ps-3 mb-3" id="claim-{{ claim_id }}-{{ claim.get('claim_index', loop.index0) }}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <strong>Subject:</strong> {{ claim.get('subject', 'N/A') }}<br>
+                        <strong>Statement:</strong> {{ claim.get('statement', claim.get('description', 'N/A')) }}<br>
+                        <strong>Object:</strong> {{ claim.get('object', claim.get('description', 'N/A')) }}<br>
+                        <strong>Aspect:</strong> {{ claim.get('aspect', 'N/A') }}<br>
+                        <strong>How Known:</strong> {{ claim.get('howKnown', 'N/A') }}
+                        
+                        {% if claim.get('status') == 'published' %}
+                        <br><strong>LinkedTrust ID:</strong> 
+                        <span class="badge bg-success">{{ claim.get('linkedtrust_id', 'N/A') }}</span>
+                        <br><small class="text-muted">Published: {{ claim.get('published_at', '')[:16] }}</small>
+                        {% elif claim.get('status') == 'failed' %}
+                        <br><strong>Error:</strong> 
+                        <span class="text-danger small">{{ claim.get('error', 'Unknown error') }}</span>
+                        <br><small class="text-muted">Failed: {{ claim.get('failed_at', '')[:16] }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <!-- Status Badge -->
+                        <div>
+                            {% if claim.get('status') == 'published' %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Published
+                            </span>
+                            {% elif claim.get('status') == 'failed' %}
+                            <span class="badge bg-danger">
+                                <i class="fas fa-times-circle me-1"></i>Failed
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-clock me-1"></i>Draft
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Individual Publish Button -->
+                        {% if claim.get('status') == 'draft' %}
+                        <button class="btn btn-sm btn-outline-primary" 
+                                onclick="publishSingleClaim('{{ claim_id }}', {{ claim.get('claim_index', loop.index0) }})"
+                                id="publish-btn-{{ claim_id }}-{{ claim.get('claim_index', loop.index0) }}">
+                            <i class="fas fa-paper-plane me-1"></i>
+                            Publish
+                        </button>
+                        {% elif claim.get('status') == 'failed' %}
+                        <button class="btn btn-sm btn-outline-warning" 
+                                onclick="retrySingleClaim('{{ claim_id }}', {{ claim.get('claim_index', loop.index0) }})"
+                                id="retry-btn-{{ claim_id }}-{{ claim.get('claim_index', loop.index0) }}">
+                            <i class="fas fa-redo me-1"></i>
+                            Retry
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Individual Status Messages -->
+                <div id="single-status-{{ claim_id }}-{{ claim.get('claim_index', loop.index0) }}" class="mt-2"></div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Bulk Status Messages -->
+        <div id="publish-status-{{ claim_id }}" class="mt-3"></div>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+    <h5>No Claims Found</h5>
+    <p class="text-muted">Upload a PDF file to extract claims</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <i class="fas fa-upload me-2"></i>
+        Upload File
+    </a>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Publish all claims in a document
+function publishAllClaims(claimId) {
+    const button = event.target.closest('button');
+    const statusDiv = document.getElementById(`publish-status-${claimId}`);
+    
+    // Disable button and show loading
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Publishing All...';
+    
+    fetch(`/api/claims/${claimId}/publish`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            statusDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    ${data.message}
+                    <br><small>Published: ${data.summary.published_count}, Failed: ${data.summary.failed_count}</small>
+                </div>
+            `;
+            // Reload page to show updated status
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            statusDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    Error: ${data.error}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        statusDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Network error: ${error.message}
+            </div>
+        `;
+    })
+    .finally(() => {
+        // Re-enable button
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Publish All to LinkedTrust';
+    });
+}
+
+// Publish a single claim
+function publishSingleClaim(claimId, claimIndex) {
+    const button = document.getElementById(`publish-btn-${claimId}-${claimIndex}`);
+    const statusDiv = document.getElementById(`single-status-${claimId}-${claimIndex}`);
+    const claimDiv = document.getElementById(`claim-${claimId}-${claimIndex}`);
+    
+    // Disable button and show loading
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Publishing...';
+    
+    fetch(`/api/claims/${claimId}/publish/${claimIndex}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            statusDiv.innerHTML = `
+                <div class="alert alert-success alert-sm py-2">
+                    <i class="fas fa-check-circle me-1"></i>
+                    Published successfully! ID: ${data.linkedtrust_id}
+                </div>
+            `;
+            
+            // Update the claim visual status
+            claimDiv.className = claimDiv.className.replace('border-info', 'border-success');
+            
+            // Hide the publish button and show published status
+            button.style.display = 'none';
+            
+            // Update status badge
+            const statusBadge = claimDiv.querySelector('.badge');
+            if (statusBadge) {
+                statusBadge.className = 'badge bg-success';
+                statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>Published';
+            }
+            
+            // Add LinkedTrust ID to the claim info
+            const claimInfo = claimDiv.querySelector('.flex-grow-1');
+            if (claimInfo && !claimInfo.innerHTML.includes('LinkedTrust ID:')) {
+                claimInfo.innerHTML += `<br><strong>LinkedTrust ID:</strong> <span class="badge bg-success">${data.linkedtrust_id}</span>`;
+                claimInfo.innerHTML += `<br><small class="text-muted">Published: ${new Date().toISOString().slice(0,16).replace('T', ' ')}</small>`;
+            }
+            
+        } else {
+            statusDiv.innerHTML = `
+                <div class="alert alert-danger alert-sm py-2">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    Error: ${data.error}
+                </div>
+            `;
+            
+            // Update the claim visual status to failed
+            claimDiv.className = claimDiv.className.replace('border-info', 'border-danger');
+            
+            // Change button to retry
+            button.innerHTML = '<i class="fas fa-redo me-1"></i>Retry';
+            button.className = 'btn btn-sm btn-outline-warning';
+            button.onclick = () => retrySingleClaim(claimId, claimIndex);
+            
+            // Update status badge
+            const statusBadge = claimDiv.querySelector('.badge');
+            if (statusBadge) {
+                statusBadge.className = 'badge bg-danger';
+                statusBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i>Failed';
+            }
+            
+            // Add error info to the claim
+            const claimInfo = claimDiv.querySelector('.flex-grow-1');
+            if (claimInfo && !claimInfo.innerHTML.includes('Error:')) {
+                claimInfo.innerHTML += `<br><strong>Error:</strong> <span class="text-danger small">${data.error}</span>`;
+                claimInfo.innerHTML += `<br><small class="text-muted">Failed: ${new Date().toISOString().slice(0,16).replace('T', ' ')}</small>`;
+            }
+        }
+    })
+    .catch(error => {
+        statusDiv.innerHTML = `
+            <div class="alert alert-danger alert-sm py-2">
+                <i class="fas fa-exclamation-circle me-1"></i>
+                Network error: ${error.message}
+            </div>
+        `;
+    })
+    .finally(() => {
+        // Re-enable button
+        button.disabled = false;
+    });
+}
+
+// Retry a failed claim (same as publish but with different button styling)
+function retrySingleClaim(claimId, claimIndex) {
+    const button = document.getElementById(`retry-btn-${claimId}-${claimIndex}`);
+    const statusDiv = document.getElementById(`single-status-${claimId}-${claimIndex}`);
+    const claimDiv = document.getElementById(`claim-${claimId}-${claimIndex}`);
+    
+    // Reset visual state to draft
+    claimDiv.className = claimDiv.className.replace('border-danger', 'border-info');
+    
+    // Update button to publish state
+    button.id = `publish-btn-${claimId}-${claimIndex}`;
+    button.className = 'btn btn-sm btn-outline-primary';
+    button.innerHTML = '<i class="fas fa-paper-plane me-1"></i>Publish';
+    
+    // Update status badge
+    const statusBadge = claimDiv.querySelector('.badge');
+    if (statusBadge) {
+        statusBadge.className = 'badge bg-secondary';
+        statusBadge.innerHTML = '<i class="fas fa-clock me-1"></i>Draft';
+    }
+    
+    // Remove error information from claim info
+    const claimInfo = claimDiv.querySelector('.flex-grow-1');
+    if (claimInfo) {
+        let html = claimInfo.innerHTML;
+        // Remove error lines
+        html = html.replace(/<br><strong>Error:<\/strong>.*?<\/span>/g, '');
+        html = html.replace(/<br><small class="text-muted">Failed:.*?<\/small>/g, '');
+        claimInfo.innerHTML = html;
+    }
+    
+    // Clear status message
+    statusDiv.innerHTML = '';
+    
+    // Now call publish function
+    publishSingleClaim(claimId, claimIndex);
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchQuery = e.target.value;
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('search', searchQuery);
+    
+    // Debounce the search
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+        window.location.href = currentUrl.toString();
+    }, 500);
+});
+
+// Auto-hide success messages after 3 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        const successAlerts = document.querySelectorAll('.alert-success');
+        successAlerts.forEach(alert => {
+            if (alert.innerHTML.includes('Published successfully')) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        });
+    }, 3000);
+});
+</script>
+
+<style>
+/* Custom styles for better UX */
+.alert-sm {
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.border-start {
+    border-left-width: 4px !important;
+}
+
+.btn-publish {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-publish:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-publish:disabled {
+    background: #6c757d;
+    transform: none;
+    box-shadow: none;
+}
+
+.claim-item {
+    transition: all 0.3s ease;
+}
+
+.claim-item:hover {
+    transform: translateX(2px);
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+/* Loading animation */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
