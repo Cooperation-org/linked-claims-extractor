@@ -7,6 +7,20 @@ import numpy as np
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
 import hashlib
+import nltk
+from pdf2image import convert_from_path
+import pytesseract
+# import pdfplumber
+import re
+from nltk.tokenize import sent_tokenize
+import spacy
+
+# check punk_tab existence
+if not nltk.data.find('tokenizers/punkt_tab'):
+   nltk.download('punkt_tab')
+
+# Load spaCy NLP model
+nlp = spacy.load('en_core_web_sm')
 
 @dataclass
 class ProcessedChunk:
@@ -117,3 +131,75 @@ class PDFProcessor:
             chunk_id=self._generate_chunk_id(content, page),
             type='image'
         )
+    
+    # clean and structure text
+    def _clean_and_structure_text(self, text:str) -> Dict[str, Any]:
+        """
+        Cleans and structures the extracted text.
+        """
+        # Remove extra whitespace and newlines
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        # Tokenize into sentences
+        sentences = sent_tokenize(text)
+
+        # Use spaCy for further processing (e.g., entity recognition)
+        doc = nlp(text)
+        entities = [(ent.text, ent.label_) for ent in doc.ents]
+
+        return {
+            'cleaned_text': text,
+            'sentences': sentences,
+            'entities': entities
+        }
+  
+    # extract all text from pdf    
+    def extract_text_from_pdf(self, pdf_path:str) -> Dict[str, Any]:
+        """
+        Extracts text from a PDF file, handling both text-based and scanned PDFs.
+        """
+        text = ""
+    
+        try:
+            # Attempt to extract text directly using PyMuPDF
+            with fitz.open(pdf_path) as doc:
+                for page_num in range(len(doc)):
+                    page = doc.load_page(page_num)
+                    text += page.get_text()
+    
+            # If no text is extracted, assume it's a scanned PDF and use OCR
+            if not text.strip():
+                print("No text found. Attempting OCR...")
+                images = convert_from_path(pdf_path, dpi=300)
+                for image in images:
+                    text += pytesseract.image_to_string(image)
+            
+            processed_text = self._clean_and_structure_text(text)
+            
+    
+        except Exception as e:
+            print(f"Error extracting text: {e}")
+    
+        return processed_text
+
+    # extract text from each page
+    def extract_text_from_pdf_per_page(self, pdf_path:str) -> List[Dict[int, str]]:
+        pages_text = []
+        try:
+            with fitz.open(pdf_path) as doc:
+                for page_num in range(len(doc)):
+                    page = doc.load_page(page_num)
+                    pages_text.append({page_num: self._clean_and_structure_text(page.get_text())['cleaned_text']})
+
+            if not any(text.strip() for page_item in pages_text for _, text in page_item.items()):
+                print("Attempting OCR...")
+                images = convert_from_path(pdf_path)
+                for page_num, image in enumerate(images):
+                    img_text = pytesseract.image_to_string(image)
+                    pages_text.append({page_num: self._clean_and_structure_text(img_text)['cleaned_text']})
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return []
+
+        return pages_text

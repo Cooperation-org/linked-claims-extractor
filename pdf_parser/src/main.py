@@ -6,7 +6,7 @@ from pdf_parser import DocumentREPL
 
 def main():
     parser = argparse.ArgumentParser(description='Process and query PDF documents')
-    parser.add_argument('--pdf', type=str, default="example.pdf",
+    parser.add_argument('--pdf', type=str, default="./tests/fixtures/goalkeeper-2024.pdf",
                        help='Path to PDF file')
     parser.add_argument('--reset', action='store_true',
                        help='Reset ChromaDB collection before processing')
@@ -27,5 +27,14 @@ def main():
     repl = DocumentREPL(doc_manager=doc_manager)
     repl.cmdloop()
 
+
 if __name__ == "__main__":
     main()
+    # doc_manager = DocumentManager()
+    # doc_manager.reset_collection()
+    # directory = Path("/Users/ziad/Downloads/gates")
+    # for path in directory.glob("*.pdf"):
+    #     main(path)
+    # repl = DocumentREPL(doc_manager=doc_manager)
+    # repl.cmdloop()
+            

@@ -1,0 +1,349 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PDF Text and Claims</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .page-section {
+                margin-bottom: 30px;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 20px;
+            }
+            .page-header {
+                background-color: #f0f7ff;
+                padding: 10px;
+                margin-bottom: 15px;
+                border-radius: 5px;
+                font-weight: bold;
+            }
+            .display-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .text-panel {
+                background-color: #f9f9f9;
+                padding: 15px;
+                border-radius: 5px;
+                border-left: 4px solid #4285f4;
+            }
+            .claims-panel {
+                display: flex;
+                flex-direction: column;
+            }
+            .claim-item {
+                background-color: #f0f7ff;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                border-left: 4px solid #0f9d58;
+            }
+            .claim-header {
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #333;
+            }
+            .no-claims {
+                color: #999;
+                font-style: italic;
+                padding: 15px;
+                text-align: center;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+            }
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>PDF Text and Claims</h1>
+    
+            <div class="page-section">
+                <div class="page-header">Page 1</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>The Race to Nourish a Warming World © UNICEF/UNI418901/Aina, Nigeria</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'https://www.unicef.org/stories/race-nourish-warming-world', 'claim': 'impact', 'object': '', 'statement': 'The Race to Nourish a Warming World', 'aspect': 'impact:social', 'amt': 0, 'name': '', 'howKnown': 'WEB_DOCUMENT', 'images': [{'url': 'https://www.unicef.org/sites/default/files/styles/hero_desktop/public/UNI418901.jpg', 'metadata': {'captian': '© UNICEF/UNI418901/Aina', 'description': 'Nigeria'}, 'effectiveDate': '', 'digestMultibase': '', 'signature': '', 'owner': ''}], 'sourceURI': 'https://www.unicef.org/stories/race-nourish-warming-world', 'effectiveDate': '', 'confidence': 0, 'claimAddress': '', 'stars': 0}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 2</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>Goalkeepers is dedicated to accelerating progress toward the Global Goals In 2015, 193 world leaders agreed to 17 ambitious goals to end poverty, fight inequality, and stop climate change by 2030. Goalkeepers focuses on accelerating progress toward those goals, with a focus on Goals 1–6. Nine years in, the world is off track. But failure is not inevitable—if we collectively challenge our assumptions about how global progress is achieved. 2 THE RACE TO NOURISH A WARMING WORLD 2 THE RACE TO NOURISH A WARMING WORLD</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'Goalkeepers', 'claim': 'impact', 'statement': 'Goalkeepers is dedicated to accelerating progress toward the Global Goals', 'aspect': 'impact:social', 'effectiveDate': None, 'sourceURI': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': '193 world leaders', 'claim': 'same_as', 'statement': 'In 2015, 193 world leaders agreed to 17 ambitious goals to end poverty, fight inequality, and stop climate change by 2030.', 'aspect': None, 'effectiveDate': '2015-01-01T00:00:00Z', 'sourceURI': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'the world', 'claim': 'impact', 'statement': 'Nine years in, the world is off track.', 'aspect': 'impact:social', 'effectiveDate': None, 'sourceURI': None}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 3</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>The race to nourish a warming world 8 Nations can’t grow if their people can’t 9 We have new tools to help solve malnutrition A recipe for progress: 4 solutions to nourish our planet 14 Ensuring more productive cows and safer milk by Sushama Das, Odisha, India and Coletta Kemboi, Maili Nne, Kenya 17 Fortifying the global pantry against micronutrient deficiencies by Ladidi Bako-Aiyegbusi, Nigeria 19 Expanding access to better prenatal vitamins by Dr. Sabin Nsanzimana, Rwanda 21 Financing progress through the Child Nutrition Fund by Dr. Víctor Aguayo, UNICEF The microbiome: the next nutrition frontier Explore the data Sources and notes 5 Contents 12 24 27 47 3 THE RACE TO NOURISH A WARMING WORLD 3 THE RACE TO NOURISH A WARMING WORLD</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'The race to nourish a warming world', 'claim': 'impact', 'statement': "Nations can't grow if their people can't", 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'The race to nourish a warming world', 'claim': 'impact', 'statement': 'We have new tools to help solve malnutrition', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/ensuring-more-productive-cows-and-safer-milk', 'claim': 'impact', 'object': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/ensuring-more-productive-cows-and-safer-milk', 'statement': 'Ensuring more productive cows and safer milk', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 4</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/fortifying-the-global-pantry-against-micronutrient-deficiencies', 'claim': 'impact', 'object': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/fortifying-the-global-pantry-against-micronutrient-deficiencies', 'statement': 'Fortifying the global pantry against micronutrient deficiencies', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 5</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/expanding-access-to-better-prenatal-vitamins', 'claim': 'impact', 'object': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/expanding-access-to-better-prenatal-vitamins', 'statement': 'Expanding access to better prenatal vitamins', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 6</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/financing-progress-through-the-child-nutrition-fund', 'claim': 'impact', 'object': 'https://www.gatesfoundation.org/goalkeepers/report/2022-report/progress-indicators/financing-progress-through-the-child-nutrition-fund', 'statement': 'Financing progress through the Child Nutrition Fund', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 4</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>The world’s worst child health crisis is malnutrition. No country, however rich, is immune. More than 400 million children aren’t getting the nutrients they need to grow and thrive. Climate change is making it even harder to solve. We have new tools and promising research to ensure kids get healthier even as the world gets hotter. Key Takeaways 4 THE RACE TO NOURISH A WARMING WORLD 4 THE RACE TO NOURISH A WARMING WORLD</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'malnutrition', 'claim': 'impact', 'statement': "The world's worst child health crisis is malnutrition.", 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'malnutrition', 'claim': 'impact', 'statement': "More than 400 million children aren't getting the nutrients they need to grow and thrive.", 'aspect': 'impact:social', 'amt': 400000000}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'climate change', 'claim': 'impact', 'statement': 'Climate change is making it even harder to solve.', 'aspect': 'impact:social'}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 5</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>Introduction The Race to Nourish a Warming World The world’s worst child health crisis is malnutrition. Climate change is making it even harder to solve. To protect the world’s children from hunger’s worst effects, we must invest in global health. by Bill Gates Co-chair, Bill & Melinda Gates Foundation When historians write about the first quarter of the 21st century, I think they may sum it up this way: Twenty years of unprecedented progress followed by five years of stagnation. This is true for nearly every issue the Bill & Melinda Gates Foundation works on, from poverty reduction to primary school enrollment. But nowhere is the contrast more stark or tragic than in health. © Bill & Melinda Gates Foundation / Patrick Meinhardt, Kenya 5 THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Solutions A Final Word Explore the Data Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2024-report/#Introduction', 'claim': 'impact', 'statement': "Climate change is making it even harder to solve [the world's worst child health crisis of malnutrition].", 'aspect': 'impact:social', 'effectiveDate': None, 'sourceURI': 'https://www.gatesfoundation.org/goalkeepers/report/2024-report/#Introduction'}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 6</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>Development assistance for health (DAH) (2022 $USD) Under-5 deaths per 1,000 live births Stalled financing threatens decades of health progress Annualized growth: 6.6% 2.3% -0.2% 2024 2020 2000 2030 $50bn $40bn $30bn $0 $60bn $20bn $10bn 60 40 20 0 80 Legend DAH, excluding COVID-19 funding Funding Projection Child Mortality 31 Development assistance for health is provided by governments and private organizations in high-income countries to low- and middle-income countries. Between 2000 and 2020, the world witnessed a “global health boom.” Child mortality fell by 50%. In 2000, more than 10 million children died every year, and now that number is down to fewer than five million children. The prevalence of the world’s deadliest infectious diseases fell by half, too. Best of all, the progress was happening in regions where the disease burden had been the highest. Sub-Saharan Africa and South Asia saw the most improvement. This health boom had many causes. A new generation of political leaders embraced humanitarianism. Hundreds of thousands of health workers fanned out across the globe, bringing the latest medicine to places that doctors had rarely visited. But one often overlooked factor was a small—yet crucial—increase in funding. Starting in 2000, the world’s wealthiest countries began steadily increasing their funding to supplement low-income countries as they increased their own investments in health. This funding fueled the work of organizations like Gavi, the Vaccine Alliance, and the Global Fund to Fight AIDS, Tuberculosis, and Malaria, which gave poorer nations access to life-saving vaccines, drugs, and other medical breakthroughs. Aid is relatively small. By 2020, wealthy countries were spending less than one quarter of 1% of their budgets on aid. That’s an average of $10.47 on health per person in the poorest countries. But that $10.47 made a remarkable difference. Then COVID-19 hit, and progress came to a screeching halt. 6 THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Solutions A Final Word Explore the Data Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'Development assistance for health (DAH)', 'claim': 'impact', 'statement': 'Between 2000 and 2020, the world witnessed a "global health boom." Child mortality fell by 50%. In 2000, more than 10 million children died every year, and now that number is down to fewer than five million children. The prevalence of the world\'s deadliest infectious diseases fell by half, too.', 'aspect': 'impact:social', 'effectiveDate': '2020-01-01T00:00:00'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'Development assistance for health (DAH)', 'claim': 'impact', 'statement': "Starting in 2000, the world's wealthiest countries began steadily increasing their funding to supplement low-income countries as they increased their own investments in health. This funding fueled the work of organizations like Gavi, the Vaccine Alliance, and the Global Fund to Fight AIDS, Tuberculosis, and Malaria, which gave poorer nations access to life-saving vaccines, drugs, and other medical breakthroughs.", 'aspect': 'impact:financial', 'effectiveDate': '2000-01-01T00:00:00'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'Development assistance for health (DAH)', 'claim': 'impact', 'statement': "By 2020, wealthy countries were spending less than one quarter of 1% of their budgets on aid. That's an average of $10.47 on health per person in the poorest countries. But that $10.47 made a remarkable difference.", 'aspect': 'impact:financial', 'amt': 10.47, 'unit': 'usd', 'effectiveDate': '2020-01-01T00:00:00'}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 7</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>Today, the world is contending with more challenges than at any point in my adult life: inflation, debt, new wars. Unfortunately, aid isn’t keeping pace with these needs, particularly in the places that need it the most. For instance, more than half of all child deaths still occur in sub-Saharan Africa. Since 2010, the percentage of the world’s poor living in the region has also increased by more than 20 percentage points. Despite this, during the same period, the share of total foreign aid to Africa has dropped from nearly 40% to only 25%—the lowest percentage in 20 years. Fewer resources mean more children will die of preventable causes. The global health boom is over. But for how long? That’s the question I have been wrestling with for the past five years: Will we look back on this period as the end of a golden era? Or is it just a brief intermission before another global health boom begins? I’m still an optimist. I think we can give global health a second act—even in a world where competing challenges require governments to stretch their budgets. To do this, we’ll need a two-pronged approach. First, the world has to recommit to the work that drove the progress in the early 2000s, especially investments in crucial vaccines and medicines. They’re still saving millions of lives each year, and we can’t afford to backslide. But we also need to look forward. The R&D pipeline © Getty Images, Bali © UNICEF/UN0856865/Abdou, Niger 7 THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Solutions A Final Word Explore the Data Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'global health', 'claim': 'impact', 'statement': 'For instance, more than half of all child deaths still occur in sub-Saharan Africa.', 'aspect': 'impact:social', 'effectiveDate': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'sub-Saharan Africa', 'claim': 'impact', 'statement': "Since 2010, the percentage of the world's poor living in the region has also increased by more than 20 percentage points.", 'aspect': 'impact:financial', 'effectiveDate': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'foreign aid to Africa', 'claim': 'impact', 'statement': 'Despite this, during the same period, the share of total foreign aid to Africa has dropped from nearly 40% to only 25%—the lowest percentage in 20 years.', 'aspect': 'impact:financial', 'effectiveDate': None}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 8</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>is brimming with powerful—and surprisingly cost- effective—new breakthroughs. Now we just need to put them to work fighting the world’s most pervasive health crises. And it starts with good nutrition. Every now and then, somebody will ask me what I would do if I had a magic wand. For years, I’ve given the same answer: I would solve malnutrition. This summer, UNICEF released its first report on child food poverty. The findings were stark. Two- thirds of the world’s children—more than 400 million kids—are not getting enough nutrients to grow and thrive, putting them at higher risk for malnutrition. In 2023, the WHO estimated that 148 million children experienced stunting, and 45 million children experienced wasting—the most severe forms of chronic and acute malnutrition. It prevents them from growing to their full potential—and, in the worst cases, from growing up at all. When a child dies, half the time the underlying cause is malnutrition. And now a significant headwind is making malnutrition harder to solve: climate change. We worked with our partners at the Institute for Health Metrics and Evaluation to better understand how difficult the headwind is: Between 2024 and 2050, climate change will mean 40 million additional children will be stunted, and 28 million additional children will be wasted. It’s an important projection, and it should inform where country leaders devote their aid money to reverse the current trends and the growing burden of malnutrition. Obviously, fighting climate change is crucial. But what these data show is that the health crisis and the climate crisis are the same thing in the poorest countries near the equator. In fact, the best way to fight the impacts of climate change is by investing in nutrition. Nations can’t grow if their people can’t Most people associate malnutrition with hunger. We’ve all seen the awful photos of starving children. That’s the most visible kind of malnutrition—but it’s not the only kind. Malnutrition also includes what doctors call “hidden hunger.” Kids can be eating enough calories and still not getting the right nutrients. When this happens to very young children, it interrupts the development of their bodies and brains. The effects are irreversible. With most serious childhood diseases, the kids who survive eventually grow up fine. But the kids who survive malnutrition never truly escape it. It follows them to school. A child who has a severe brush with malnutrition before the age of three will complete five fewer years of schooling than well-nourished kids. And the malnourished kids who do remain in school tend to do poorly and take longer to complete each grade than their peers. As these kids become adults, it continues to haunt them. Studies show that people who went hungry as © Gates Archive / Mansi Midha, India 8 THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Solutions A Final Word Explore the Data Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2024-report/#Introduction', 'claim': 'impact', 'statement': 'Between 2024 and 2050, climate change will mean 40 million additional children will be stunted, and 28 million additional children will be wasted.', 'aspect': 'impact:social', 'effectiveDate': '2024-01-01'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'https://www.gatesfoundation.org/goalkeepers/report/2024-report/#Introduction', 'claim': 'rated', 'statement': "Two-thirds of the world's children—more than 400 million kids—are not getting enough nutrients to grow and thrive, putting them at higher risk for malnutrition.", 'aspect': 'quality:overall', 'score': -0.6}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 9</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>©Source. Location, ©Source. Location, kids earn 10% less over their lifetimes and are 33% less likely to escape poverty. Nations can’t grow if their people can’t. The economic costs of undernutrition are significant: It is estimated that every year, the cost of undernutrition is US$3 trillion in productivity loss because malnutrition has stunted people’s physical and cognitive abilities. In low- income countries, that loss ranges from 3 to 16 percent (or more) of GDP. It’s the equivalent of a permanent 2008-level global recession. Today, one in every five of the world’s children suffers from stunting, and climate change threatens to increase that number. We should ask: What will that mean for the global economy in 20 years when these children are in the prime of their working lives? Few economists think of the malnutrition rate as a critical economic data point—but they should start. Nutritional deficits quickly translate into financial deficits. We have new tools to help solve malnutrition By now, it’s clear: Malnutrition makes every forward step our species wants to take heavier and harder. But the inverse is also true. If we solve malnutrition, we make it easier to solve every other problem. We solve extreme poverty. Vaccines are more effective. And deadly diseases like malaria and pneumonia become far less fatal. © Gates Archive/ Mansi Midha, India © Gates Archive / Gordwin Odhiambo, Kenya 9 Solutions A Final Word Explore the Data THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'undernutrition', 'claim': 'impact', 'statement': "It is estimated that every year, the cost of undernutrition is US$3 trillion in productivity loss because malnutrition has stunted people's physical and cognitive abilities.", 'aspect': 'impact:financial', 'amt': 3000000000000, 'unit': 'usd'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'undernutrition in low-income countries', 'claim': 'impact', 'statement': 'In low- income countries, that loss ranges from 3 to 16 percent (or more) of GDP.', 'aspect': 'impact:financial'}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'malnutrition rate', 'claim': 'same_as', 'statement': "Today, one in every five of the world's children suffers from stunting", 'aspect': 'quality:overall'}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+            <div class="page-section">
+                <div class="page-header">Page 10</div>
+                <div class="display-grid">
+                    <div class="text-panel">
+                        <pre>That’s why I believe we can jumpstart a second global health boom by getting kids the right nutrients. This is especially true now, because we have more tools to ensure kids gets healthier even as the world gets hotter. The science of nutrition has experienced a renaissance over the past decade. Animal scientists have discovered how to breed more productive livestock, while food scientists have found new ways to fortify more nutrients into the staples of people’s diets—like salt, flour, and bouillon cubes. Doctors are even beginning to unlock the mysteries of the microbiome, the teeming universe of bacteria that lives inside our digestive tracts. As you read on, you’ll hear from people on the front line of nourishing people around the world. Together, they’re showing us how we can jumpstart another golden age for health: with a lot of grit, creativity, and enormous generosity toward their fellow human beings. 10 THE RACE TO NOURISH A WARMING WORLD GOALKEEPERS REPORT 2024 Solutions A Final Word Explore the Data Introduction</pre>
+                    </div>
+                    <div class="claims-panel">
+        
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 1</div>
+                            <pre>{'subject': 'nutrition science', 'claim': 'impact', 'statement': 'The science of nutrition has experienced a renaissance over the past decade.', 'aspect': 'impact:social', 'effectiveDate': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 2</div>
+                            <pre>{'subject': 'animal scientists', 'claim': 'impact', 'statement': 'Animal scientists have discovered how to breed more productive livestock', 'aspect': 'impact:social', 'effectiveDate': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 3</div>
+                            <pre>{'subject': 'food scientists', 'claim': 'impact', 'statement': "Food scientists have found new ways to fortify more nutrients into the staples of people's diets—like salt, flour, and bouillon cubes.", 'aspect': 'impact:social', 'effectiveDate': None}</pre>
+                        </div>
+                
+                        <div class="claim-item">
+                            <div class="claim-header">Claim 4</div>
+                            <pre>{'subject': 'doctors', 'claim': 'impact', 'statement': 'Doctors are even beginning to unlock the mysteries of the microbiome, the teeming universe of bacteria that lives inside our digestive tracts.', 'aspect': 'impact:social', 'effectiveDate': None}</pre>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </body>
+    </html>
+    
