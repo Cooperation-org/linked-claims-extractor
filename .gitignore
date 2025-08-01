@@ -5,6 +5,9 @@
 *.swp
 *.*swp
 
+# Uploads
+uploads/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
