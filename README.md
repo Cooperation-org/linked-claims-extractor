@@ -1,57 +1,48 @@
-# Linked Claims Extractor and PDF Parser
+# Linked Claims Extractor
 
-This repository contains two independent projects for extracting and processing claims from text, URLs, and PDFs using AI-powered language models (LLMs). Both projects will be published to PyPI, currently the extractor is published.
-
-## Projects
-
-1. **[Linked Claims Extractor](./claim_extractor/README.md)**: Extracts structured claims from unstructured text, URLs, or PDFs using AI models like Anthropic and OpenAI.
-2. **[PDF Parser](./pdf_parser/README.md)**: Processes PDF files into structured chunks of text and images, making it easier to analyze and verify claims.
-
----
+Extract structured claims from text, URLs, and PDFs using AI-powered language models (LLMs).
 
 ## Installation
 
-Each project will be installed independently via PyPI:
-
-### Linked Claims Extractor
 ```bash
 pip install linked-claims-extractor
 ```
 
-### PDF Parser
-PyPI tbd
+## About
 
-For now install manually by following the instructions in the readme
+This is the core Python library for extracting structured claims from unstructured text. It supports:
 
----
+- Text extraction from multiple sources (raw text, URLs, PDFs)
+- Multiple AI providers (Anthropic Claude, OpenAI GPT)
+- Customizable schemas for different claim types
+- Easy integration into Python applications
 
-## Production Deployment
+## Related Projects
 
-The PDF Parser includes comprehensive deployment documentation for production environments:
+- **[linked-claims-extraction-service](https://github.com/Cooperation-org/linked-claims-extraction-service)**: Web service and API for PDF processing and claim extraction (deployed at https://extract.linkedtrust.us)
+- **[linked-claims-research](https://github.com/Cooperation-org/linked-claims-research)**: Research playground for experimental claim extraction approaches
 
-### Deployment Guides
-- **[Production Deployment Guide](./pdf_parser_DEPLOYMENT_GUIDE.MD)**: Complete guide for deploying the PDF Parser to production servers, including server setup, SSL configuration, and domain management.
-- **[Maintenance & Updates Guide](./pdf_parser_MAINTAINANCE_GUIDE.md)**: Step-by-step instructions for maintaining the production deployment, updating code from GitHub, monitoring logs, and troubleshooting common issues.
+## Quick Start
 
-### Quick Production Setup
-The PDF Parser can be deployed as a production web service with:
-- ✅ **Systemd service management** for auto-restart and process monitoring
-- ✅ **Nginx reverse proxy** with SSL/TLS encryption
-- ✅ **Let's Encrypt SSL certificates** with automatic renewal
-- ✅ **Comprehensive logging** and monitoring setup
-- ✅ **GitHub integration** for seamless code updates
+```python
+from claim_extractor import ClaimExtractor
 
-**Live Demo**: [https://extract.linkedtrust.us](https://extract.linkedtrust.us)
+# Initialize extractor
+extractor = ClaimExtractor()
 
----
+# Extract claims from text
+claims = extractor.extract_claims("Your text here...")
 
-## Contributing
+# Extract from URL
+claims = extractor.extract_from_url("https://example.com/article")
 
-Contributions are welcome! Please refer to the individual project READMEs for contribution guidelines.
+# Extract from PDF
+claims = extractor.extract_from_pdf("path/to/document.pdf")
+```
 
-For production deployments, see the deployment guides in the `docs/` directory for server access and maintenance procedures.
+## Documentation
 
----
+See the [claim_extractor/README.md](./claim_extractor/README.md) for detailed documentation.
 
 ## License
 
