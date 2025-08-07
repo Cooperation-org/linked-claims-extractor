@@ -27,12 +27,15 @@ The SSH private key is stored in the secure vault:
 
 3. **Connect to the server**:
    ```bash
-   ssh -i extract_key.pem root@24.144.88.199
-   # or
-   ssh -i extract_key.pem root@extract.linkedtrust.us
+   ssh -i extractor.pem extractor@24.144.88.199
    ```
 
-4. **Navigate to the application directory**:
+4. **Navigate to the application directory [password is in the note section on vault**:
+5. ```bash 
+   sudo su - root 
+   ```
+
+6. 
    ```bash
    cd /root/ext/linked-claims-extractor
    ```
