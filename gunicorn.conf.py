@@ -1,9 +1,0 @@
-bind = "127.0.0.1:5050"
-workers = 3  
-worker_class = "sync"
-timeout = 300
-max_requests = 1000
-preload_app = True
-accesslog = "/var/log/gunicorn/access.log"
-errorlog = "/var/log/gunicorn/error.log"
-loglevel = "info"
