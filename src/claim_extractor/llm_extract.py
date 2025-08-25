@@ -3,16 +3,16 @@ import re
 import logging
 from typing import List, Dict, Any, Optional
 import os
-from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_anthropic import ChatAnthropic
-from langchain.base_language import BaseLanguageModel
+from langchain_core.language_models.base import BaseLanguageModel
 from .schemas.loader import load_schema_info, LINKED_TRUST
 
 def default_llm():
     return ChatAnthropic(
-        model=os.getenv("CLAUDE_MODEL"),  # This is the current Sonnet model
-        temperature=0,  # 0 to 1, lower means more deterministic
-        max_tokens=os.getenv("CLAUDE_MAX_TOKENS", 4096))
+        model=os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022"),
+        temperature=0,
+        max_tokens=int(os.getenv("CLAUDE_MAX_TOKENS", 4096)))
 
 class ClaimExtractor:
     def __init__(
@@ -31,33 +31,27 @@ class ClaimExtractor:
         self.schema, self.meta = load_schema_info(schema_name)
         self.llm = llm or default_llm()
         self.system_template = f"""
-        You are a JSON claim extraction specialist. Your task is to analyze input text and identify factual claims that can be proven true or false through evidence matching the following schema:
+        You are a JSON claim extraction specialist extracting LinkedClaims (https://identity.foundation/labs-linkedclaims/).
+        Extract claims matching this schema:
         {self.schema}
 
-        Meta Context for Claims:
+        Meta Context:
         {self.meta}
 
+        CRITICAL REQUIREMENTS:
+        1. subject and object MUST be URIs (http://, https://, did:, urn:, etc.)
+        2. If text mentions entities without URIs, construct appropriate URIs (e.g., https://example.com/entity/John_Smith)
+        3. claim should preferably be one of: funds_for_purpose, is_vouched_for, rated, impact, same_as, validated, related_to, owns, performed (all lowercase)
+        4. howKnown values: DOCUMENT, WEB_DOCUMENT, FIRST_HAND, SECOND_HAND, DERIVED
+
         Instructions:
-        1. Focus only on extracting claims that can be verified with evidence
-        2. Thoroughly examine the provided text while cross-referencing the schema requirements
-        3. Only extract claims that are explicitly stated or strongly implied in the text
-        4. Maintain strict adherence to the defined schema structure
-        5. If no claims match the criteria, return an empty array []
-        6. Never invent claims or use external knowledge
-        7. Prioritize precision over quantity
-        8. If the text contains formatting artifacts or appears to be a fragment from a PDF, carefully analyze it to identify any verifiable claims despite these issues
-        
+        - Extract only verifiable claims from the text
+        - Subject and object must ALWAYS be valid URIs
+        - Use lowercase for claim predicates
+        - Return empty array [] if no valid claims found
+        - Never use external knowledge
 
-        Output Guidelines:
-        - ALWAYS output a valid JSON array (starting with [ and ending with ])
-        - NEVER include markdown formatting or code blocks
-        - NEVER add explanations, disclaimers, or non-JSON content
-        - Ensure proper JSON syntax and escaping
-        - Maintain case sensitivity as defined in the schema
-
-        Response must be exclusively the JSON array with no additional text.
-        Text:
-        
+        Output: Valid JSON array only, no markdown or explanations.
         """
         
 
