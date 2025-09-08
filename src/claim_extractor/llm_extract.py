@@ -40,16 +40,20 @@ class ClaimExtractor:
 
         CRITICAL REQUIREMENTS:
         1. subject and object MUST be URIs (http://, https://, did:, urn:, etc.)
-        2. If text mentions entities without URIs, construct appropriate URIs (e.g., https://example.com/entity/John_Smith)
+        2. For entities, use REAL verifiable URIs:
+           - Wikipedia: https://en.wikipedia.org/wiki/Entity_Name
+           - LinkedIn: https://linkedin.com/company/company-name  
+           - Official websites: https://actual-company.com
+           - NEVER use example.com, test.com, or fake domains
         3. claim should preferably be one of: funds_for_purpose, is_vouched_for, rated, impact, same_as, validated, related_to, owns, performed (all lowercase)
         4. howKnown values: DOCUMENT, WEB_DOCUMENT, FIRST_HAND, SECOND_HAND, DERIVED
 
         Instructions:
         - Extract only verifiable claims from the text
-        - Subject and object must ALWAYS be valid URIs
+        - Subject and object must ALWAYS be valid, real URIs
         - Use lowercase for claim predicates
         - Return empty array [] if no valid claims found
-        - Never use external knowledge
+        - Only use real, verifiable URIs - NO fake/placeholder URLs
 
         Output: Valid JSON array only, no markdown or explanations.
         """
