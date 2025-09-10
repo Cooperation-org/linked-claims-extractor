@@ -1,0 +1,710 @@
+[
+  {
+    "filename": "test_document.txt",
+    "document_type": "Meta Baseline",
+    "text_length": 642,
+    "claims_count": 5,
+    "claims": [
+      {
+        "subject": "Meta",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Maintained net zero GHG emissions in global operations since 2020",
+        "effectiveDate": "2020-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Meta",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Completed 18 operational water restoration projects returning more than 1.5 billion gallons of water to high and medium water stress regions",
+        "amt": 1.5,
+        "unit": "billion gallons",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Meta",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Contracted more than 11,700 megawatts of renewable energy",
+        "amt": 11700,
+        "unit": "MW",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Meta",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Committed to becoming water positive by 2030, restoring 200% of water consumed in high water stress areas and 100% in medium water stress areas",
+        "effectiveDate": "2030-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Meta",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Recycled 90% of construction waste in data centers in 2023",
+        "amt": 90,
+        "unit": "%",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      }
+    ],
+    "avg_confidence": 0.9,
+    "min_confidence": 0.9,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:environmental": 5
+    },
+    "claim_types": {
+      "impact": 5
+    },
+    "quantified_claims": 3,
+    "words_per_claim": 21
+  },
+  {
+    "filename": "test_financial_claims.txt",
+    "document_type": "Financial Focus",
+    "text_length": 548,
+    "claims_count": 7,
+    "claims": [
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Achieved record revenue of $2.4 billion in Q3 2024",
+        "amt": 2400000000,
+        "unit": "usd",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.9
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "15% revenue increase year-over-year",
+        "amt": 15,
+        "unit": "percent",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.9
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Cost reduction initiatives saved $50 million annually",
+        "amt": 50000000,
+        "unit": "usd",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.8
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:market",
+        "statement": "Increased market share by 8 percentage points in telecommunications sector",
+        "amt": 8,
+        "unit": "percent",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.8
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Profit margin improved to 23.5%, up from 19.2%",
+        "amt": 23.5,
+        "unit": "percent",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.9
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:research",
+        "statement": "Investment in R&D totaled $180 million, representing 7.5% of total revenue",
+        "amt": 180000000,
+        "unit": "usd",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.9
+      },
+      {
+        "subject": "company",
+        "claim": "impact",
+        "aspect": "impact:work",
+        "statement": "Employee productivity increased by 12% following new workflow systems",
+        "amt": 12,
+        "unit": "percent",
+        "effectiveDate": "2024-07-01",
+        "confidence": 0.7
+      }
+    ],
+    "avg_confidence": 0.843,
+    "min_confidence": 0.7,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:financial": 4,
+      "impact:market": 1,
+      "impact:research": 1,
+      "impact:work": 1
+    },
+    "claim_types": {
+      "impact": 7
+    },
+    "quantified_claims": 7,
+    "words_per_claim": 11
+  },
+  {
+    "filename": "test_social_impact.txt",
+    "document_type": "Social Impact",
+    "text_length": 638,
+    "claims_count": 6,
+    "claims": [
+      {
+        "subject": "literacy program",
+        "claim": "impact",
+        "aspect": "impact:social",
+        "statement": "reached 25,000 children across 150 rural schools in 2024",
+        "amt": 25000,
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9
+      },
+      {
+        "subject": "job training initiative",
+        "claim": "impact",
+        "aspect": "impact:work",
+        "statement": "placed 85% of participants in full-time employment within six months of completion",
+        "amt": 85,
+        "confidence": 0.9
+      },
+      {
+        "subject": "military transition program",
+        "claim": "impact",
+        "aspect": "impact:work",
+        "statement": "hired 300 veterans, exceeding annual target by 25%",
+        "amt": 300,
+        "confidence": 0.9
+      },
+      {
+        "subject": "community health clinics",
+        "claim": "impact",
+        "aspect": "impact:social",
+        "statement": "served 50,000 patients and reduced infant mortality rates by 30% in target regions",
+        "amt": 50000,
+        "confidence": 0.9
+      },
+      {
+        "subject": "scholarship program",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "provided $5 million in educational funding to 1,200 first-generation college students",
+        "amt": 5000000,
+        "confidence": 0.9
+      },
+      {
+        "subject": "supplier diversity program",
+        "claim": "impact",
+        "aspect": "impact:economic",
+        "statement": "sources 40% of materials from minority-owned businesses",
+        "amt": 40,
+        "confidence": 0.9
+      }
+    ],
+    "avg_confidence": 0.9,
+    "min_confidence": 0.9,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:social": 2,
+      "impact:work": 2,
+      "impact:financial": 1,
+      "impact:economic": 1
+    },
+    "claim_types": {
+      "impact": 6
+    },
+    "quantified_claims": 6,
+    "words_per_claim": 15
+  },
+  {
+    "filename": "test_environmental_data.txt",
+    "document_type": "Environmental",
+    "text_length": 642,
+    "claims_count": 6,
+    "claims": [
+      {
+        "subject": "Solar Panel Installations",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Solar panel installations generated 12 million kWh of clean energy, avoiding 8,500 tons of CO2 emissions",
+        "amt": 12000000,
+        "unit": "kWh",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Water Conservation",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Water conservation efforts reduced consumption by 2.5 million gallons compared to 2023 baseline levels",
+        "amt": 2500000,
+        "unit": "gallons",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Manufacturing Waste Management",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "The company diverted 95% of manufacturing waste from landfills through improved recycling and composting programs",
+        "amt": 95,
+        "unit": "%",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Fleet Electrification",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Fleet electrification replaced 500 diesel vehicles with electric alternatives, reducing emissions by 1,200 tons annually",
+        "amt": 500,
+        "unit": "vehicles",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Reforestation Projects",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Reforestation projects planted 75,000 native trees across 2,000 acres of degraded land",
+        "amt": 75000,
+        "unit": "trees",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Energy Efficiency",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Energy efficiency upgrades decreased facility electricity usage by 35% while maintaining production levels",
+        "amt": 35,
+        "unit": "%",
+        "effectiveDate": "2024-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      }
+    ],
+    "avg_confidence": 0.9,
+    "min_confidence": 0.9,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:environmental": 6
+    },
+    "claim_types": {
+      "impact": 6
+    },
+    "quantified_claims": 6,
+    "words_per_claim": 14
+  },
+  {
+    "filename": "test_tech_company.txt",
+    "document_type": "Tech Company",
+    "text_length": 666,
+    "claims_count": 4,
+    "claims": [
+      {
+        "subject": "Google Tensor Processing Unit (TPU) Trillium",
+        "claim": "impact",
+        "aspect": "impact:energy",
+        "statement": "Google's sixth-generation Tensor Processing Unit (TPU) Trillium is over 67% more energy-efficient than TPU v5e",
+        "amt": 67,
+        "unit": "percent",
+        "effectiveDate": "2024-11-07T21:23:25.596Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.9
+      },
+      {
+        "subject": "AI Model Training",
+        "claim": "impact",
+        "aspect": "impact:energy",
+        "statement": "Research shows tested practices can reduce energy required to train AI models by up to 100 times and reduce associated emissions by up to 1,000 times when used together",
+        "amt": 100,
+        "unit": "times",
+        "effectiveDate": "2024-11-07T21:23:25.596Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.8
+      },
+      {
+        "subject": "UK Energy Infrastructure",
+        "claim": "impact",
+        "aspect": "impact:energy",
+        "statement": "The UK became the first G7 nation to completely phase out coal power in September 2024 with closure of Ratcliffe-on-Soar coal plant after 140 years",
+        "effectiveDate": "2024-09-01T00:00:00.000Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.9
+      },
+      {
+        "subject": "Global Hydropower",
+        "claim": "impact",
+        "aspect": "impact:energy",
+        "statement": "Global hydropower capacity increased by 400 GW, solidifying its position as the largest renewable electricity source",
+        "amt": 400,
+        "unit": "GW",
+        "effectiveDate": "2024-11-07T21:23:25.596Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.7
+      }
+    ],
+    "avg_confidence": 0.825,
+    "min_confidence": 0.7,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:energy": 4
+    },
+    "claim_types": {
+      "impact": 4
+    },
+    "quantified_claims": 3,
+    "words_per_claim": 24
+  },
+  {
+    "filename": "test_microsoft_report.txt",
+    "document_type": "Microsoft Report",
+    "text_length": 578,
+    "claims_count": 3,
+    "claims": [
+      {
+        "subject": "Microsoft",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Microsoft committed to becoming carbon negative, water positive, zero waste, and protect more land than we use by 2030",
+        "effectiveDate": "2030-01-01T00:00:00Z",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Microsoft Cloud for Sustainability",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Expanded to include Scopes 1, 2, and all 15 categories of Scope 3 carbon emissions tracking",
+        "confidence": 0.8,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Planetary Computer",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Provides open access to petabytes of environmental monitoring data",
+        "confidence": 0.7,
+        "howKnown": "WEB_DOCUMENT"
+      }
+    ],
+    "avg_confidence": 0.8,
+    "min_confidence": 0.7,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:environmental": 3
+    },
+    "claim_types": {
+      "impact": 3
+    },
+    "quantified_claims": 0,
+    "words_per_claim": 26
+  },
+  {
+    "filename": "test_real_world_amazon.txt",
+    "document_type": "Amazon Real-World",
+    "text_length": 503,
+    "claims_count": 6,
+    "claims": [
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Amazon has reduced its carbon intensity by 11.3% since 2019",
+        "amt": 11.3,
+        "unit": "%",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Achieved 90% renewable energy across its global operations in 2023",
+        "amt": 90,
+        "unit": "%",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Diverted 2.7 million tons of packaging waste from landfills through improved recycling programs",
+        "amt": 2.7,
+        "unit": "million tons",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Committed to reaching net zero carbon emissions by 2040, ten years ahead of the Paris Agreement",
+        "effectiveDate": "2040-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Pledged to deploy 100,000 electric delivery vehicles by 2030",
+        "amt": 100000,
+        "unit": "vehicles",
+        "effectiveDate": "2030-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Amazon",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Plans to invest $10 billion in climate solutions through the Climate Pledge Fund",
+        "amt": 10,
+        "unit": "billion USD",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      }
+    ],
+    "avg_confidence": 0.9,
+    "min_confidence": 0.9,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:environmental": 5,
+      "impact:financial": 1
+    },
+    "claim_types": {
+      "impact": 6
+    },
+    "quantified_claims": 5,
+    "words_per_claim": 13
+  },
+  {
+    "filename": "test_real_world_unilever.txt",
+    "document_type": "Unilever Real-World",
+    "text_length": 572,
+    "claims_count": 8,
+    "claims": [
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Achieved a 50% reduction in CO2 emissions from energy across its facilities since 2008",
+        "amt": 50,
+        "unit": "%",
+        "effectiveDate": "2008-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Eliminated 100,000 tons of plastic packaging in 2023",
+        "amt": 100000,
+        "unit": "tons",
+        "effectiveDate": "2023-01-01",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:social",
+        "statement": "Sourced 67% of its agricultural raw materials sustainably",
+        "amt": 67,
+        "unit": "%",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:social",
+        "statement": "Provided safe drinking water access to 1.3 billion people through its brands",
+        "amt": 1300000000,
+        "unit": "people",
+        "confidence": 0.9,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Committed to achieving net zero emissions from its products by 2039",
+        "effectiveDate": "2039-01-01",
+        "confidence": 0.8,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Pledged to halve food waste in its direct operations by 2025",
+        "amt": 50,
+        "unit": "%",
+        "effectiveDate": "2025-01-01",
+        "confidence": 0.8,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Plans to invest \u20ac1 billion annually in sustainable innovation",
+        "amt": 1000000000,
+        "unit": "EUR",
+        "confidence": 0.8,
+        "howKnown": "WEB_DOCUMENT"
+      },
+      {
+        "subject": "Unilever",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Aims to source 100% renewable energy by 2030",
+        "amt": 100,
+        "unit": "%",
+        "effectiveDate": "2030-01-01",
+        "confidence": 0.8,
+        "howKnown": "WEB_DOCUMENT"
+      }
+    ],
+    "avg_confidence": 0.85,
+    "min_confidence": 0.8,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:environmental": 5,
+      "impact:social": 2,
+      "impact:financial": 1
+    },
+    "claim_types": {
+      "impact": 8
+    },
+    "quantified_claims": 7,
+    "words_per_claim": 11
+  },
+  {
+    "filename": "test_real_world_patagonia.txt",
+    "document_type": "Patagonia Real-World",
+    "text_length": 594,
+    "claims_count": 8,
+    "claims": [
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:financial",
+        "statement": "Patagonia donated $100 million in climate profits to environmental organizations in 2022",
+        "amt": 100000000,
+        "unit": "usd",
+        "effectiveDate": "2022-01-01T00:00:00Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.9
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia achieved carbon neutrality across its owned facilities in 2025",
+        "effectiveDate": "2025-01-01T00:00:00Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.8
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia diverted 95% of waste from landfills",
+        "amt": 95,
+        "unit": "%",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.9
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia recycled 87 tons of used clothing through its Worn Wear program",
+        "amt": 87,
+        "unit": "tons",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.8
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia committed to become carbon neutral across its entire supply chain by 2030",
+        "effectiveDate": "2030-01-01T00:00:00Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.7
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia pledged to use 100% renewable or recycled materials by 2025",
+        "effectiveDate": "2025-01-01T00:00:00Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.8
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:agricultural",
+        "statement": "Patagonia plans to regenerate organic cotton farming practices across 40,000 acres",
+        "amt": 40000,
+        "unit": "acres",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.7
+      },
+      {
+        "subject": "Patagonia",
+        "claim": "impact",
+        "aspect": "impact:environmental",
+        "statement": "Patagonia aims to eliminate all virgin petroleum-based materials from its products by 2030",
+        "effectiveDate": "2030-01-01T00:00:00Z",
+        "howKnown": "WEB_DOCUMENT",
+        "confidence": 0.7
+      }
+    ],
+    "avg_confidence": 0.787,
+    "min_confidence": 0.7,
+    "max_confidence": 0.9,
+    "aspects": {
+      "impact:financial": 1,
+      "impact:environmental": 6,
+      "impact:agricultural": 1
+    },
+    "claim_types": {
+      "impact": 8
+    },
+    "quantified_claims": 4,
+    "words_per_claim": 11
+  }
+]
