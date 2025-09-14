@@ -11,7 +11,7 @@
     {
       "url": "string",
       "metadata": {
-        "captian": "string",
+        "caption": "string",
         "description": "string"
       },
       "effectiveDate": "2024-11-07T21:23:25.596Z",
