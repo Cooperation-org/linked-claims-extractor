@@ -10,9 +10,9 @@ from .schemas.loader import load_schema_info, LINKED_TRUST
 
 def default_llm():
     return ChatAnthropic(
-        model=os.getenv("CLAUDE_MODEL"),  # This is the current Sonnet model
-        temperature=0,  # 0 to 1, lower means more deterministic
-        max_tokens=os.getenv("CLAUDE_MAX_TOKENS", 4096))
+        model=os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022"),
+        temperature=0,
+        max_tokens=int(os.getenv("CLAUDE_MAX_TOKENS", 4096)))
 
 class ClaimExtractor:
     def __init__(
