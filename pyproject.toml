@@ -9,7 +9,7 @@ description = "Extract structured claims from text"
 readme = "README.md"
 authors = [
     { name = "Golda Velez", email = "gvelez17@gmail.com" },
-    { name = "Miriam Yee", email = 
+    { name = "Miriam Yee", email = "myee058@gmail.com" },
 ]
 license = { text = "MIT" }
 requires-python = ">=3.8"
