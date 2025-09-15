@@ -34,7 +34,7 @@ class ClaimExtractor:
         """
         self.schema, self.meta = load_schema_info(schema_name)
         self.llm = llm or default_llm()
-        self.system_template = system_template or f"""
+        self.system_template = f"""
         You are a JSON claim extraction specialist extracting LinkedClaims (https://identity.foundation/labs-linkedclaims/).
         Extract claims matching this schema:
         {self.schema}
