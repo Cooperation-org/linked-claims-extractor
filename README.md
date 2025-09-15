@@ -10,6 +10,10 @@ from claim_extractor import ClaimExtractor
 # Initialize
 extractor = ClaimExtractor()
 
+## OPTIONALLY include extra instructions and override default message prompt
+
+extractor=ClaimExtractor(extra_system_instructions="Only look for claims about islands", message_prompt="The following narrative may or may not have claims in it, include any claims about islands and especially trees on islands. Otherwise return empty array if not found.  Here is the text {text}")
+
 # Extract claims from text
 text = "John Smith was the CEO of TechCorp from 2020 to 2023 and increased revenue by 40%."
 claims = extractor.extract_claims(text)
@@ -17,17 +21,20 @@ claims = extractor.extract_claims(text)
 # Returns:
 # [
 #   {
-#     "subject": "https://example.com/entity/John_Smith",
-#     "claim": "performed", 
-#     "object": "https://example.com/entity/TechCorp",
+#     "subject": "urn:person:John_Smith",
+#     "claim": "controlled", 
+#     "object": "urn:company:TechCorp",
+      "effectiveDate": 2020,
+      "statement": "John Smith was the CEO of TechCorp from 2020 to 2023",
 #     "howKnown": "DOCUMENT",
-#     "confidence": 0.95
 #   },
 #   {
-#     "subject": "https://example.com/entity/John_Smith",
-#     "claim": "impact",
-#     "object": "https://example.com/metric/revenue_increase_40%",
-#     "confidence": 0.9
+#     "subject": "urn:person:John_Smith",
+#     "claim": "impact:revenue",
+#     "object": "urn:company:TechCorp",
+#     "amt": 1.4,
+#     "effectiveDate": 2023,
+#     "statement": "John Smith increased revenue of Tech Corp by 40% from 2020 to 2023"
 #   }
 # ]
 ```

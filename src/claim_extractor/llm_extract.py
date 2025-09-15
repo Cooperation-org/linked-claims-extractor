@@ -21,7 +21,8 @@ class ClaimExtractor:
         self, 
         llm: Optional[BaseLanguageModel] = None,
         schema_name: str = LINKED_TRUST,
-        extra_system_instructions: Optional[str] = ''
+        extra_system_instructions: Optional[str] = '',
+        message_prompt: Optional[str] = None
     ):
         """
         Initialize claim extractor with specified schema and LLM.
@@ -50,6 +51,9 @@ class ClaimExtractor:
 
         Output: Valid JSON array only, no markdown or explanations.
         """
+        self.message_prompt = message_prompt
+        if not re.search(r'\{text\}', message_prompt):
+            self.message_prompt += " {text}"
         
 
     def make_prompt(self, prompt=None) -> ChatPromptTemplate:
@@ -57,6 +61,8 @@ class ClaimExtractor:
             
         if prompt:
             prompt += " {text}"
+        elif self.message_prompt:
+            prompt = self.message_prompt
         else:
             prompt = """Here is a narrative that may or may not contain claims.  Please extract any specific, verifiable claims in the specified format.
 
