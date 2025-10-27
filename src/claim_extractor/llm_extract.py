@@ -55,21 +55,28 @@ class ClaimExtractor:
         """
         
 
-    def make_prompt(self, prompt=None) -> ChatPromptTemplate:
+    def make_prompt(self, prompt=None, override_prompt=False) -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
         if prompt is None:
             prompt = self.system_template
-            
-        if prompt:
-            prompt += " {text}"
-        else:
-            prompt = """Here is a narrative about some impact. Please extract any specific claims:
-        {text}"""
 
-        return ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(self.system_template),
-            HumanMessagePromptTemplate.from_template(prompt)
-        ])
+        logging.info(f"*** system_prompt = {self.system_template}")
+        if override_prompt:
+            logging.info(f"*** Overriding system prompt: {prompt}")
+#            logging.info(f"*** Overriding system prompt! ***")
+            message_list = [
+                SystemMessagePromptTemplate.from_template(prompt),
+                HumanMessagePromptTemplate.from_template("""Here is a narrative about some impact.
+                Please extract any specific claims: {text}"""),
+            ]
+        else:
+            prompt += " {text}"
+            logging.info(f"*** Original non-system prompt: {prompt}")
+            message_list = [
+                SystemMessagePromptTemplate.from_template(self.system_template),
+                HumanMessagePromptTemplate.from_template(prompt)
+            ]
+        return ChatPromptTemplate.from_messages(message_list)
 
     # def print_messages(self, messages):
     #     """Print formatted messages for debugging"""
@@ -87,21 +94,23 @@ class ClaimExtractor:
     #     print(response.content)
     #     print("=== END LLM RESPONSE ===\n")
     
-    def extract_claims(self, text: str, prompt=None) -> List[Dict[str, Any]]:
+    def extract_claims(self, text: str, prompt=None, override_prompt=False) -> List[Dict[str, Any]]:
         """
         Extract claims from the given text.
         
         Args:
             text: Text to extract claims from
+            override_prompt: If true, prompt replaces the system prompt, rather than being appended
             
         Returns:
             List[Dict[str, Any]]: JSON array of extracted claims
         """
-        prompt_template = self.make_prompt(prompt)
+        prompt_template = self.make_prompt(prompt, override_prompt)
         
         # Format messages with the text
+        logging.info(f"*** TEXT = {text}")
         messages = prompt_template.format_messages(text=text)
-        # self.print_messages(messages)
+        logging.info(f"*** MESSAGES = {messages}")
         response = None
         try:
             print("Sending request to LLM...")
