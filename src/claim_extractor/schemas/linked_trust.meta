@@ -1,12 +1,12 @@
-
-subject: identify the entity the claim is about
-claim: one of 'impact', 'rated', 'same_as'
+subject: entity the claim is about, as a URI. May be urn:entity:name if no clear URI
+claim: one of 'impact', 'rated', 'same_as', 'funds_for_purpose', 'validated', 'reported'
 aspect: similar to 'impact:financial', 'impact:social', 'impact:work', 'quality:overall', 'quality:affordable', 'quality:fun', 'report:scam', 'report:dangerous'
 effectiveDate: when the impact or rating occurred, if you can tell
-object: only if it has a url
+object: only if the claim has a direct object, such as impact made on specific entity. Must be a URI.
 statement: this is the concise narrative of the claim, quoted from the text
 amt: optional, generally only for impact claims and only if an amount is present.  The total impact claimed.
 unit: include if amt is set ; usd if dollars, or set according to what amt is counting
 stars: optional if claim is a rating, scale is 1-5, otherwise leave out of the result
 score: if claim is a rating, may be set from -1 to 1 as a float, otherwise unset.  5 stars = score of 1
-sourceURI: the url of the document where the claim was extracted.  DO NOT MAKE UP leave blank if unknown
+sourceURI: the url of the document where the claim was extracted, if known, or blank
+howKnown: when running the extractor, generally WEB_DOCUMENT or DOCUMENT.  Can also be FIRST_HAND or SECOND_HAND if entered directly by a witness.
