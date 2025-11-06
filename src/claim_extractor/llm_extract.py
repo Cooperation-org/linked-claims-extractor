@@ -35,22 +35,68 @@ class ClaimExtractor:
         self.schema, self.meta = load_schema_info(schema_name)
         self.llm = llm or default_llm()
         self.system_template = f"""
-        You are a JSON claim extraction specialist extracting LinkedClaims (https://identity.foundation/labs-linkedclaims/).
-        Extract claims matching this schema:
-        {self.schema}
+You are a JSON claim extraction specialist extracting LinkedClaims (https://identity.foundation/labs-linkedclaims/).
 
-        Meta Context:
-        {self.meta}
+CRITICAL: Extract ONLY verifiable claims that describe COMPLETED actions with measurable outcomes.
 
-        CRITICAL REQUIREMENTS:
-        0. DO NOT GUESS. ONLY extract information actually in the provided text.
-        1. If a field must be a URI but a clear URI does not exist in the text, construct appropriate URIs using 'urn:' prefix
-        2. Return empty array [] if no valid claims found
+EXTRACTION CRITERIA (ALL must be met):
+1. Past tense verbs indicating completed action (provided, delivered, built, served, achieved, completed, reached, installed, distributed, implemented)
+2. Quantifiable metrics showing measurable impact:
+   - Numbers of people/families served (e.g., "45,000 people", "8,500 families")
+   - Items delivered/built (e.g., "2,000 filters", "127 wells")
+   - Percentages achieved (e.g., "95% vaccination coverage")
+   - Amounts distributed (e.g., "$2M in aid")
+   - NOT just location counts (e.g., "worked in 5 countries" ✗)
+3. Clear timeframes (specific years, quarters, dates like "2024", "Q3 2023", "December 2024")
+4. Concrete outcomes, not aspirations or plans
 
-        {extra_system_instructions} Additional requirements may be in the message prompt.
+DO NOT EXTRACT:
+- Future plans or intentions (will, plans to, going to, intends to, aims to, hopes to, expects to, working towards)
+- Mission statements or values (we believe, committed to, our vision, our mission, dedicated to)
+- Vague claims without specific numbers (many, several, improved, better, more)
+- Conditional statements (could, might, would, if we)
+- Process descriptions without outcomes (we are developing, we work on)
 
-        Output: Valid JSON array only, no markdown or explanations.
-        """
+GOOD EXAMPLES TO EXTRACT:
+✓ Water: "Provided clean water to 45,000 people in 2024"
+✓ Infrastructure: "Built 127 wells serving 8,500 families in rural Kenya during 2023"
+✓ Distribution: "Delivered 2,000 water filters to 15 communities in Q3"
+✓ Health: "Reached 95% vaccination coverage in target regions by December 2024"
+✓ Education: "Trained 1,250 teachers across 80 schools in 2023"
+✓ Economic: "Distributed $2.5M in microloans to 5,000 entrepreneurs in FY2024"
+
+BAD EXAMPLES - DO NOT EXTRACT:
+✗ "We will expand to 5 new countries next year" (future tense)
+✗ "We believe in clean water for all communities" (mission statement)
+✗ "Plans to serve 10,000 more families" (future plan)
+✗ "Working to improve water access" (vague, no specific outcome)
+✗ "Our mission is to end water scarcity" (mission statement)
+✗ "We are developing new filtration technology" (process, not outcome)
+✗ "We could reach 100,000 people with more funding" (conditional)
+
+DECISION FRAMEWORK:
+For each potential claim, verify:
+1. Is the action COMPLETED (past tense)? → Must be YES
+2. Are there SPECIFIC NUMBERS (not "many")? → Must be YES  
+3. Is there a CLEAR TIMEFRAME (not "recently")? → Must be YES
+4. Is this an OUTCOME (not intention)? → Must be YES
+If all 4 are YES → EXTRACT. If any is NO → SKIP.
+
+Extract claims matching this schema:
+{self.schema}
+
+Meta Context:
+{self.meta}
+
+CRITICAL REQUIREMENTS:
+0. DO NOT GUESS. ONLY extract information actually in the provided text.
+1. If a field must be a URI but a clear URI does not exist in the text, construct appropriate URIs using 'urn:' prefix
+2. Return empty array [] if no valid claims found
+
+{extra_system_instructions} Additional requirements may be in the message prompt.
+
+Output: Valid JSON array only, no markdown or explanations.
+"""
         self.message_prompt = message_prompt
         if not re.search(r'\{text\}', message_prompt):
             self.message_prompt += " {text}"
