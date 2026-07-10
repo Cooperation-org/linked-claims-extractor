@@ -3,6 +3,7 @@ import re
 import logging
 from typing import List, Dict, Any, Optional
 import os
+import requests
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models.base import BaseLanguageModel
@@ -10,10 +11,18 @@ from .schemas.loader import load_schema_info, LINKED_TRUST
 
 logger = logging.getLogger(__name__)
 
+# claude-3-5-sonnet-20241022 was retired 2025-10-28; claude-sonnet-5 is its
+# documented drop-in replacement. Sonnet 5 rejects non-default sampling
+# parameters, so temperature must not be set here.
+DEFAULT_CLAUDE_MODEL = "claude-sonnet-5"
+
+# Default human message when no message_prompt is configured.
+DEFAULT_MESSAGE_TEMPLATE = """Here is a narrative about some impact.
+                Please extract any specific claims: {text}"""
+
 def default_llm():
     return ChatAnthropic(
-        model=os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022"),
-        temperature=0,
+        model=os.getenv("CLAUDE_MODEL", DEFAULT_CLAUDE_MODEL),
         max_tokens=int(os.getenv("CLAUDE_MAX_TOKENS", 4096)))
 
 class ClaimExtractor:
@@ -51,33 +60,32 @@ class ClaimExtractor:
 
         Output: Valid JSON array only, no markdown or explanations.
         """
+        if message_prompt is not None and not re.search(r'\{text\}', message_prompt):
+            message_prompt += " {text}"
         self.message_prompt = message_prompt
-        if not re.search(r'\{text\}', message_prompt):
-            self.message_prompt += " {text}"
-        
 
     def make_prompt(self, prompt=None, override_prompt=False) -> ChatPromptTemplate:
         """Prepare the prompt - for now this is static, later may vary by type of claim"""
 
-        if prompt is None:
-            prompt = self.system_template
+        default_message = self.message_prompt or DEFAULT_MESSAGE_TEMPLATE
 
-        logging.info(f"*** system_prompt = {self.system_template}")
-        if override_prompt:
-            logging.info(f"*** Overriding system prompt: {prompt}")
-#            logging.info(f"*** Overriding system prompt! ***")
-            message_list = [
-                SystemMessagePromptTemplate.from_template(prompt),
-                HumanMessagePromptTemplate.from_template("""Here is a narrative about some impact.
-                Please extract any specific claims: {text}"""),
-            ]
+        if override_prompt and prompt is not None:
+            logger.info(f"*** Overriding system prompt: {prompt}")
+            system = prompt
+            message = default_message
         else:
-            prompt += " {text}"
-            logging.info(f"*** Original non-system prompt: {prompt}")
-            message_list = [
-                SystemMessagePromptTemplate.from_template(self.system_template),
-                HumanMessagePromptTemplate.from_template(prompt)
-            ]
+            system = self.system_template
+            if prompt is not None:
+                if not re.search(r'\{text\}', prompt):
+                    prompt += " {text}"
+                message = prompt
+            else:
+                message = default_message
+
+        message_list = [
+            SystemMessagePromptTemplate.from_template(system),
+            HumanMessagePromptTemplate.from_template(message),
+        ]
         return ChatPromptTemplate.from_messages(message_list)
 
     
@@ -93,12 +101,12 @@ class ClaimExtractor:
             List[Dict[str, Any]]: JSON array of extracted claims
         """
         prompt_template = self.make_prompt(prompt, override_prompt)
-        
+
         # Format messages with the text
-        logging.info(f"*** TEXT = {text}")
+        logger.debug(f"*** TEXT = {text}")
         messages = prompt_template.format_messages(text=text)
 
-        logging.info(f"*** MESSAGES = {messages}")
+        logger.debug(f"*** MESSAGES = {messages}")
 
         response = None
         try:
@@ -145,7 +153,6 @@ class ClaimExtractor:
         Returns:
             List[Dict[str, Any]]: JSON array of extracted claims
         """
-        import requests
         logger.debug(f"Fetching content from URL: {url}")
         response = requests.get(url)
         response.raise_for_status()

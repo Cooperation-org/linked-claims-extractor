@@ -4,7 +4,6 @@ import json
 from pprint import pprint
 from unittest.mock import Mock, patch
 from claim_extractor import ClaimExtractor
-from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -47,7 +46,7 @@ SAMPLE_WITH_LINK = should[1][0]
 @pytest.fixture
 def mock_llm():
     mock = Mock()
-    mock.return_value.content = EXPECTED_CLAIMS
+    mock.invoke.return_value.content = EXPECTED_CLAIMS
     return mock
 
 @pytest.fixture
